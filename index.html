@@ -113,63 +113,18 @@
     animation: fade-up 1s var(--ease) 0.7s backwards;
   }
 
-  /* black sphere — the 3D object */
-  .sphere-wrap {
-    position: absolute;
-    right: 96px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 230px;
-    height: 230px;
-    animation: fade-in-s 1.2s var(--ease) 0.85s backwards;
-    perspective: 600px;
-    transition: transform 0.35s ease-out;
-  }
-  @keyframes fade-in-s { from { opacity: 0; } to { opacity: 1; } }
-
-  .sphere {
-    --hx: 34%;    /* main highlight x */
-    --hy: 30%;    /* main highlight y */
-    --gx: 22%;    /* glint x */
-    --gy: 16%;    /* glint y */
+  /* liquid glass bubbles canvas — overlays the sheet */
+  #bubbleCanvas {
     position: absolute;
     inset: 0;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 34% 30%, #5a5a5a 0%, #2e2e2e 22%, #111111 52%, #000 100%);
-    box-shadow:
-      0 30px 60px rgba(0,0,0,0.30),
-      0 8px 18px rgba(0,0,0,0.18),
-      inset -8px -12px 40px rgba(255,255,255,0.05);
-    animation: sphere-breathe 7s ease-in-out infinite;
-    transition: transform 0.18s ease-out;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 1.2s var(--ease);
   }
-  @keyframes sphere-breathe {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-10px); }
-  }
-  /* specular highlight — follows cursor */
-  .sphere::after {
-    content: "";
-    position: absolute;
-    left: var(--hx); top: var(--hy);
-    width: 24%; height: 17%;
-    border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 70%);
-    filter: blur(2px);
-    transition: left 0.15s ease-out, top 0.15s ease-out;
-  }
-  /* tiny secondary glint — follows cursor loosely */
-  .sphere::before {
-    content: "";
-    position: absolute;
-    left: var(--gx); top: var(--gy);
-    width: 8%; height: 6%;
-    border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%);
-    filter: blur(3px);
-    transition: left 0.25s ease-out, top 0.25s ease-out;
-  }
+  #bubbleCanvas.on { opacity: 1; }
 
   /* small caption bottom-left of sheet */
   .cv-caption {
@@ -226,7 +181,6 @@
   }
 
   @media (max-width: 760px) {
-    .sphere-wrap { right: -60px; top: 24%; width: 150px; height: 150px; opacity: 0.9; }
     .cv-title { left: 32px; font-size: 2.6rem; }
     .cv-sub { left: 32px; }
     .cv-caption { left: 32px; bottom: 76px; }
@@ -651,9 +605,7 @@
     <h1 class="cv-title">Hello,<br><span class="thin">IAIer</span>.</h1>
     <div class="cv-sub">真题 · 模拟 · 原创写作资料</div>
 
-    <div class="sphere-wrap" aria-hidden="true">
-      <div class="sphere"></div>
-    </div>
+    <canvas id="bubbleCanvas" aria-hidden="true"></canvas>
 
     <div class="cv-caption">
       <b>IAI</b> — Love &amp; Initiative
@@ -866,6 +818,21 @@
 </div>
 
 <script>
+  /* sequential multi-CDN loader for three.js (China-network friendly) */
+  (function loadThree(urls) {
+    if (!urls.length) return; /* bubbles simply won't start; site still works */
+    var sc = document.createElement('script');
+    sc.src = urls[0];
+    sc.onload = function () { if (!window.THREE) loadThree(urls.slice(1)); };
+    sc.onerror = function () { loadThree(urls.slice(1)); };
+    document.head.appendChild(sc);
+  })([
+    'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+    'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js',
+    'https://unpkg.com/three@0.160.1/build/three.min.js'
+  ]);
+</script>
+<script>
   /* ---------- cover ---------- */
   const cover = document.getElementById('cover');
   const app = document.getElementById('app');
@@ -878,63 +845,509 @@
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterApp(); }
   });
 
-  /* ---------- sphere interaction: light follows cursor ---------- */
-  (function sphereLight() {
-    const wrap = document.querySelector('.sphere-wrap');
-    const sphere = document.querySelector('.sphere');
-    if (!wrap || !sphere) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return;
-
-    let raf = null;
-    const REST = { hx: 34, hy: 30, gx: 68, gy: 72 };
-
-    function apply(hx, hy, gx, gy, tx, ty) {
-      sphere.style.setProperty('--hx', hx + '%');
-      sphere.style.setProperty('--hy', hy + '%');
-      sphere.style.setProperty('--gx', gx + '%');
-      sphere.style.setProperty('--gy', gy + '%');
-      // tilt lives on the wrapper so the breathe animation on .sphere keeps running
-      wrap.style.transform = `translateY(-50%) rotateX(${tx}deg) rotateY(${ty}deg)`;
-    }
-
-    function onMove(e) {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = null;
-        const r = sphere.getBoundingClientRect();
-        const cx = r.left + r.width / 2;
-        const cy = r.top + r.height / 2;
-        // normalized offset from sphere center, -1..1 (clamped)
-        let dx = (e.clientX - cx) / (r.width * 1.6);
-        let dy = (e.clientY - cy) / (r.height * 1.6);
-        dx = Math.max(-1, Math.min(1, dx));
-        dy = Math.max(-1, Math.min(1, dy));
-
-        // highlight travels across the sphere face, mirrored like a reflection
-        const hx = 50 - dx * 30;   // cursor right -> light left (reflection)
-        const hy = 50 + dy * 26;
-        // glint drifts loosely opposite
-        const gx = 50 + dx * 34;
-        const gy = 50 + dy * 30;
-        // sphere tilts subtly toward the cursor
-        const tx = -dy * 7;
-        const ty = dx * 9;
-
-        apply(hx, hy, gx, gy, tx, ty);
-      });
-    }
-
-    function onLeave() {
-      apply(REST.hx, REST.hy, REST.gx, REST.gy, 0, 0);
-      wrap.style.transform = '';
-    }
-
-    // listen on the whole sheet so light reacts as cursor approaches
+  /* ---------- liquid glass bubbles (metaball refraction) ---------- */
+  (function liquidGlass() {
+    const canvas = document.getElementById('bubbleCanvas');
+    if (!canvas) return;
     const sheet = document.getElementById('sheet');
-    sheet.addEventListener('mousemove', onMove);
-    sheet.addEventListener('mouseleave', onLeave);
-    sphere.addEventListener('mouseleave', onLeave);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { canvas.remove(); return; }
+
+    const MAX_DROPLETS = 40;
+    const FIXED_DT_MS = 8;
+
+    let renderer = null;
+    let scene = null;
+    let camera = null;
+
+    /* start once three is ready */
+    let started = false;
+    function start() {
+      if (started) return;
+      started = true;
+
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+      scene = new THREE.Scene();
+      camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+
+      const bgCanvas2 = document.createElement('canvas');
+      const bgCtx2 = bgCanvas2.getContext('2d');
+      const bgTexture = new THREE.CanvasTexture(bgCanvas2);
+      bgTexture.minFilter = THREE.LinearFilter;
+      bgTexture.magFilter = THREE.LinearFilter;
+      bgTexture.flipY = true;    /* canvas row0(top) -> v=1, matches flipped uv below */
+
+    /* draw the sheet's typography into the refraction texture,
+         replicating the DOM text node-by-node (positions/sizes/weights read live) */
+        function drawBackgroundFromDOM() {
+        const w = renderer.domElement.width;
+        const h = renderer.domElement.height;
+        bgCanvas2.width = w; bgCanvas2.height = h;
+        bgCtx2.fillStyle = '#ffffff';
+        bgCtx2.fillRect(0, 0, w, h);
+        const dpr = w / canvas.clientWidth;
+        const sheetRect = sheet.getBoundingClientRect();
+
+        function px(sel, fn) {
+          const el = document.querySelector(sel);
+          if (!el) return;
+          fn(el, getComputedStyle(el), el.getBoundingClientRect());
+        }
+
+        bgCtx2.textBaseline = 'middle';
+
+        /* eyebrow */
+        px('.cv-eyebrow', (el, st, r) => {
+          const size = parseFloat(st.fontSize) * dpr;
+          bgCtx2.font = `${st.fontWeight} ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
+          bgCtx2.fillStyle = st.color;
+          try { bgCtx2.letterSpacing = (0.34 * size) + 'px'; } catch(e) {}
+          bgCtx2.textAlign = 'center';
+          bgCtx2.fillText(el.textContent.trim(), (r.left - sheetRect.left + r.width/2) * dpr, (r.top - sheetRect.top + r.height/2) * dpr);
+          bgCtx2.letterSpacing = '0px';
+        });
+
+        /* title: two lines, "Hello," 800 / "IAIer." 300 */
+        px('.cv-title', (el, st, r) => {
+          const size = parseFloat(st.fontSize) * dpr;
+          const lh = size * 1.04;
+          const family = st.fontFamily.split(',')[0] + ', sans-serif';
+          const x = (r.left - sheetRect.left) * dpr;
+          const y0 = (r.top - sheetRect.top) * dpr;
+          bgCtx2.textAlign = 'left';
+          bgCtx2.fillStyle = st.color;
+          bgCtx2.font = `800 ${size}px ${family}`;
+          bgCtx2.fillText('Hello,', x, y0 + lh * 0.5);
+          bgCtx2.font = `300 ${size}px ${family}`;
+          bgCtx2.fillText('IAIer.', x, y0 + lh * 1.5);
+        });
+
+        /* sub */
+        px('.cv-sub', (el, st, r) => {
+          const size = parseFloat(st.fontSize) * dpr;
+          bgCtx2.textAlign = 'left';
+          bgCtx2.letterSpacing = (0.14 * size) + 'px';
+          bgCtx2.font = `${st.fontWeight} ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
+          bgCtx2.fillStyle = st.color;
+          bgCtx2.fillText(el.textContent.trim(), (r.left - sheetRect.left) * dpr, (r.top - sheetRect.top + r.height/2) * dpr);
+          bgCtx2.letterSpacing = '0px';
+        });
+
+        /* caption (2 lines: b + text) */
+        px('.cv-caption', (el, st, r) => {
+          const size = parseFloat(st.fontSize) * dpr;
+          const lh = parseFloat(st.lineHeight || 1.7) * size / 1 || size * 1.7;
+          const x = (r.left - sheetRect.left) * dpr;
+          const y0 = (r.top - sheetRect.top) * dpr;
+          bgCtx2.textAlign = 'left';
+          bgCtx2.letterSpacing = (0.08 * size) + 'px';
+          bgCtx2.font = `600 ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
+          bgCtx2.fillStyle = getComputedStyle(document.querySelector('.cv-caption b')).color;
+          bgCtx2.fillText('IAI — Love & Initiative', x, y0 + lh * 0.5);
+          bgCtx2.letterSpacing = '0px';
+        });
+
+        /* enter hint */
+        px('.cv-enter', (el, st, r) => {
+          const size = parseFloat(st.fontSize) * dpr;
+          bgCtx2.textAlign = 'right';
+          bgCtx2.letterSpacing = (0.22 * size) + 'px';
+          bgCtx2.font = `${st.fontWeight} ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
+          bgCtx2.fillStyle = st.color;
+          bgCtx2.fillText('ENTER', (r.left - sheetRect.left + r.width) * dpr, (r.top - sheetRect.top + r.height/2) * dpr);
+          bgCtx2.letterSpacing = '0px';
+        });
+
+        bgTexture.needsUpdate = true;
+      }
+
+      /* boot: paint a white backdrop immediately (a 0×0 canvas texture samples black),
+         then redraw with typography once fonts settle, then reveal bubbles */
+      drawBackgroundFromDOM();
+      document.fonts.ready.then(() => setTimeout(() => {
+        drawBackgroundFromDOM();
+        canvas.classList.add('on');
+      }, 300));
+
+      /* droplet buffers */
+      const MAX_ENTRIES = MAX_DROPLETS * 2;
+      const dropletBuf = new Float32Array(MAX_ENTRIES * 4);
+      const dropletTex = new THREE.DataTexture(dropletBuf, MAX_ENTRIES, 1, THREE.RGBAFormat, THREE.FloatType);
+      dropletTex.minFilter = THREE.NearestFilter;
+      dropletTex.magFilter = THREE.NearestFilter;
+      dropletTex.needsUpdate = true;
+
+      let drops = [];
+      let uid = 0;
+      function spawn(x, y, r, vx = 0, vy = 0) {
+        if (drops.length >= MAX_DROPLETS) return null;
+        const area = Math.PI * r * r;
+        const angle = Math.random() * Math.PI * 2;
+        const spd = 0.0003 + Math.random() * 0.0008;
+        const d = {
+          id: uid++, x, y, r, area,
+          vx: vx || Math.cos(angle) * spd,
+          vy: vy || Math.sin(angle) * spd,
+          alive: true,
+          wanderAngle: Math.random() * Math.PI * 2,
+          wanderSpeed: 0.3 + Math.random() * 0.5,
+          softPrevX: x, softPrevY: y,
+          softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0,
+        };
+        drops.push(d);
+        return d;
+      }
+
+      let aspect = canvas.clientWidth / canvas.clientHeight;
+
+      /* seed bubbles across the whole sheet — they drift over the text
+         so the refraction warping stays visible */
+      for (let i = 0; i < 12; i++) {
+        spawn(
+          (Math.random() - 0.5) * aspect * 0.72,
+          (Math.random() - 0.5) * 0.58,
+          0.028 + Math.random() * 0.045
+        );
+      }
+
+      /* shader */
+      const vertSrc = `void main(){ gl_Position = vec4(position, 1.0); }`;
+      const fragSrc = `
+precision highp float;
+#define MAX_N ${MAX_ENTRIES}
+uniform vec2      uRes;
+uniform sampler2D uData;
+uniform sampler2D uBg;
+uniform int       uCount;
+uniform float     uTime;
+void main(){
+  vec2  frag = gl_FragCoord.xy / uRes;      /* bottom-up */
+  vec2  uv   = vec2(frag.x, 1.0 - frag.y);  /* texture-space (top-down) */
+  float asp  = uRes.x / uRes.y;
+  vec2  p    = (frag - 0.5) * vec2(asp, 1.0);
+  float field = 0.0;
+  vec2  grad  = vec2(0.0);
+  vec2  lens  = vec2(0.0);
+  float lensW = 0.0;
+  for(int i = 0; i < MAX_N; i++){
+    if(i >= uCount) break;
+    vec4  d = texture2D(uData, vec2((float(i)+0.5)/float(MAX_N), 0.5));
+    vec2  c = d.xy;
+    float r = d.z;
+    if(r < 0.001) continue;
+    vec2  delta = p - c;
+    float dSq   = dot(delta, delta) + 1e-5;
+    float contrib = r * r / dSq;
+    field += contrib;
+    grad  += -2.0 * contrib / dSq * delta;
+    float w = r * r / (dSq + r * r);
+    lens += (c - p) * w;
+    lensW += w;
+  }
+  lens /= (lensW + 0.001);
+  float lensLen = length(lens);
+  float thr  = 1.0;
+  float edge = smoothstep(thr - 0.08, thr + 0.03, field);
+  float refractStrength = 0.05;
+  float mappedLens = atan(lensLen * 6.0) * refractStrength;
+  vec2  refractDir = (lensLen > 1e-5) ? lens / lensLen : vec2(0.0);
+  float refractMask = smoothstep(thr - 0.2, thr + 1.5, field);
+  vec2  refractedUV = clamp(uv + refractDir * mappedLens * refractMask, 0.001, 0.999);
+  float gradLen = length(grad);
+  float nScale = atan(gradLen * 0.5) * 0.3;
+  vec2  nGrad  = (gradLen > 1e-4) ? (grad / gradLen) * nScale : vec2(0.0);
+  vec3  N = normalize(vec3(-nGrad, 1.0));
+  vec3  L = normalize(vec3(0.3, 0.6, 1.0));
+  vec3  V = vec3(0.0, 0.0, 1.0);
+  vec3  H = normalize(L + V);
+  float diff = max(dot(N, L), 0.0);
+  float spec = pow(max(dot(N, H), 0.0), 180.0);
+  float cosTheta = max(dot(N, V), 0.0);
+  float fresnel  = 0.04 + 0.96 * pow(1.0 - cosTheta, 4.0);
+  float rim = smoothstep(thr + 0.6, thr, field) * edge;
+  float caStr = 0.0018 * edge;
+  vec3 bgCA;
+  bgCA.r = texture2D(uBg, refractedUV + vec2(caStr, caStr * 0.5)).r;
+  bgCA.g = texture2D(uBg, refractedUV).g;
+  bgCA.b = texture2D(uBg, refractedUV - vec2(caStr, caStr * 0.5)).b;
+  /* clear glass over white paper: visible via dark rim, slight interior
+     darkening, specular dot, and drop shadow — like real clear glass */
+  float depth = smoothstep(thr, thr + 3.0, field);
+  vec3 glassColor = bgCA * 0.965;                       /* slight darkening vs page */
+  glassColor = mix(glassColor, glassColor * vec3(0.955, 0.975, 1.0), depth * 0.6); /* cool depth */
+  glassColor *= 1.0 - fresnel * 0.10;                    /* edges pick up less light */
+  glassColor += vec3(1.0) * spec * 0.95;                 /* white specular dot */
+  glassColor += vec3(0.9, 0.95, 1.0) * rim * 0.10;
+
+  /* thin DARK rim ring — the main outline that reads on white */
+  float borderOuter = smoothstep(thr - 0.12, thr - 0.02, field);
+  float borderInner = smoothstep(thr + 0.0, thr + 0.05, field);
+  float border = borderOuter * (1.0 - borderInner);
+  glassColor = mix(glassColor, vec3(0.52, 0.56, 0.62), border * 0.55);
+
+  /* soft shadow outside the glass (down-right) */
+  vec2 shDir = normalize(vec2(0.55, -0.83));
+  float dirW = clamp(0.5 - dot(normalize(lens + vec2(1e-5)), -shDir) * 0.5, 0.0, 1.0);
+  float sh = smoothstep(0.22, 0.9, field) * (1.0 - edge);
+  vec3 shadowCol = vec3(0.40, 0.44, 0.52) * sh * (0.16 + 0.30 * dirW);
+
+  vec3 col = glassColor * edge + shadowCol;
+  float alphaOut = max(edge, sh * 0.46);
+  gl_FragColor = vec4(col, alphaOut);
+}`;
+
+      const mat = new THREE.ShaderMaterial({
+        vertexShader: vertSrc,
+        fragmentShader: fragSrc,
+        uniforms: {
+          uRes: { value: new THREE.Vector2(renderer.domElement.width, renderer.domElement.height) },
+          uData: { value: dropletTex },
+          uBg: { value: bgTexture },
+          uCount: { value: 0 },
+          uTime: { value: 0 },
+        },
+      });
+      scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
+
+      /* input — mapped to sheet-local coordinates */
+      const mouse = { x: 999, y: 999, active: false, down: false };
+      let spawnCD = 0;
+      sheet.addEventListener('pointermove', (e) => {
+        const rect = sheet.getBoundingClientRect();
+        const cx = canvas.clientWidth, cy = canvas.clientHeight;
+        mouse.x = ((e.clientX - rect.left) / rect.width - 0.5) * (cx / cy);
+        mouse.y = 0.5 - (e.clientY - rect.top) / rect.height;
+        mouse.active = true;
+      });
+      sheet.addEventListener('pointerdown', () => { mouse.down = true; });
+      window.addEventListener('pointerup', () => { mouse.down = false; });
+      sheet.addEventListener('pointerleave', () => { mouse.active = false; mouse.down = false; });
+
+      /* physics params */
+      const DAMP = 0.993;
+      const MOUSE_R = 0.18;
+      const MOUSE_F = 0.004;
+      const TENSION_RANGE = 0.12;
+      const TENSION_F = 0.0004;
+      const MERGE_RATIO = 0.62;
+      const SPLIT_SPEED = 0.013;
+      const SPLIT_MIN_R = 0.04;
+      const MAX_SPEED = 0.015;
+      const BOUNCE = 0.4;
+      const WANDER_F = 0.00004;
+      const CENTER_PULL = 0.000008;
+
+      function applyForces(time) {
+        for (const d of drops) {
+          d.wanderAngle += (Math.random() - 0.5) * d.wanderSpeed;
+          d.vx += Math.cos(d.wanderAngle) * WANDER_F;
+          d.vy += Math.sin(d.wanderAngle) * WANDER_F;
+          d.vx -= d.x * CENTER_PULL * 0.5;
+          d.vy -= d.y * CENTER_PULL;
+          if (mouse.active) {
+            const dx = d.x - mouse.x;
+            const dy = d.y - mouse.y;
+            const dSq = dx * dx + dy * dy;
+            const rr = MOUSE_R + d.r;
+            if (dSq < rr * rr && dSq > 1e-5) {
+              const dist = Math.sqrt(dSq);
+              const s = 1 - dist / rr;
+              const f = s * s * MOUSE_F;
+              d.vx += (dx / dist) * f;
+              d.vy += (dy / dist) * f;
+            }
+          }
+        }
+        for (let i = 0; i < drops.length; i++) {
+          const a = drops[i];
+          for (let j = i + 1; j < drops.length; j++) {
+            const b = drops[j];
+            const dx = b.x - a.x, dy = b.y - a.y;
+            const dSq = dx * dx + dy * dy;
+            const rng = TENSION_RANGE + a.r + b.r;
+            if (dSq < rng * rng && dSq > 1e-5) {
+              const dist = Math.sqrt(dSq);
+              const s = 1 - dist / rng;
+              const f = s * TENSION_F;
+              a.vx += (dx / dist) * f; a.vy += (dy / dist) * f;
+              b.vx -= (dx / dist) * f; b.vy -= (dy / dist) * f;
+            }
+          }
+        }
+      }
+
+      function integrate() {
+        const wx = aspect * 0.5, wy = 0.5;
+        for (const d of drops) {
+          const sp = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
+          if (sp > MAX_SPEED) { const s = MAX_SPEED / sp; d.vx *= s; d.vy *= s; }
+          d.x += d.vx; d.y += d.vy;
+          d.vx *= DAMP; d.vy *= DAMP;
+          if (d.x - d.r < -wx) { d.x = -wx + d.r; d.vx = Math.abs(d.vx) * BOUNCE; }
+          if (d.x + d.r > wx)  { d.x = wx - d.r;  d.vx = -Math.abs(d.vx) * BOUNCE; }
+          if (d.y - d.r < -wy) { d.y = -wy + d.r; d.vy = Math.abs(d.vy) * BOUNCE; }
+          if (d.y + d.r > wy)  { d.y = wy - d.r;  d.vy = -Math.abs(d.vy) * BOUNCE; }
+        }
+      }
+
+      function mergeDroplets() {
+        for (let i = 0; i < drops.length; i++) {
+          const a = drops[i];
+          if (!a.alive) continue;
+          for (let j = i + 1; j < drops.length; j++) {
+            const b = drops[j];
+            if (!b.alive) continue;
+            const dx = b.x - a.x, dy = b.y - a.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < (a.r + b.r) * MERGE_RATIO) {
+              const na = a.area + b.area;
+              a.x = (a.x * a.area + b.x * b.area) / na;
+              a.y = (a.y * a.area + b.y * b.area) / na;
+              a.vx = (a.vx * a.area + b.vx * b.area) / na;
+              a.vy = (a.vy * a.area + b.vy * b.area) / na;
+              a.r = Math.sqrt(na / Math.PI);
+              a.area = na;
+              b.alive = false;
+            }
+          }
+        }
+        drops = drops.filter(d => d.alive);
+      }
+
+      function splitDroplets() {
+        const add = [];
+        for (const d of drops) {
+          if (d.r < SPLIT_MIN_R) continue;
+          const sp = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
+          if (sp < SPLIT_SPEED) continue;
+          const ha = d.area * 0.5;
+          const nr = Math.sqrt(ha / Math.PI);
+          const nx = -d.vy / sp, ny = d.vx / sp;
+          const off = nr * 0.7;
+          d.r = nr; d.area = ha;
+          d.x -= nx * off; d.y -= ny * off;
+          add.push({
+            id: uid++, x: d.x + nx * off * 2, y: d.y + ny * off * 2, r: nr, area: ha,
+            vx: d.vx + nx * sp * 0.35, vy: d.vy + ny * sp * 0.35, alive: true,
+            wanderAngle: Math.random() * Math.PI * 2, wanderSpeed: 0.3 + Math.random() * 0.5,
+            softPrevX: d.x, softPrevY: d.y, softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0,
+          });
+        }
+        for (const a of add) if (drops.length < MAX_DROPLETS) drops.push(a);
+      }
+
+      let autoTimer = 0;
+      function autoSpawn() {
+        autoTimer += FIXED_DT_MS;
+        if (autoTimer > 2000 && drops.length < 10) {
+          autoTimer = 0;
+          spawn(
+            (Math.random() - 0.5) * aspect * 0.6,
+            (Math.random() - 0.5) * 0.6,
+            0.025 + Math.random() * 0.03
+          );
+        }
+      }
+
+      function mouseSpawn() {
+        if (!mouse.down || !mouse.active) return;
+        spawnCD -= FIXED_DT_MS;
+        if (spawnCD <= 0 && drops.length < MAX_DROPLETS) {
+          spawnCD = 120;
+          spawn(
+            mouse.x + (Math.random() - 0.5) * 0.02,
+            mouse.y + (Math.random() - 0.5) * 0.02,
+            0.02 + Math.random() * 0.015
+          );
+        }
+      }
+
+      const SOFT_STIFFNESS = 0.22;
+      const SOFT_DAMPING = 0.6;
+      function updateSoftBodies() {
+        for (const d of drops) {
+          const dx = d.x - d.softPrevX, dy = d.y - d.softPrevY;
+          d.softVelX += (dx - d.softOffX) * SOFT_STIFFNESS;
+          d.softVelY += (dy - d.softOffY) * SOFT_STIFFNESS;
+          d.softVelX *= SOFT_DAMPING; d.softVelY *= SOFT_DAMPING;
+          d.softOffX += d.softVelX; d.softOffY += d.softVelY;
+          d.softPrevX = d.x; d.softPrevY = d.y;
+        }
+      }
+
+      function sync() {
+        dropletBuf.fill(0);
+        const n = Math.min(drops.length, MAX_DROPLETS);
+        for (let i = 0; i < n; i++) {
+          const d = drops[i];
+          dropletBuf[i * 4] = d.x;
+          dropletBuf[i * 4 + 1] = d.y;
+          dropletBuf[i * 4 + 2] = d.r;
+          dropletBuf[i * 4 + 3] = 1;
+          const ghostScale = 0.7;
+          const trailStr = 3.5;
+          const gi = (n + i) * 4;
+          dropletBuf[gi] = d.x - d.softOffX * trailStr;
+          dropletBuf[gi + 1] = d.y - d.softOffY * trailStr;
+          dropletBuf[gi + 2] = d.r * ghostScale;
+          dropletBuf[gi + 3] = 1;
+        }
+        dropletTex.needsUpdate = true;
+        mat.uniforms.uCount.value = n * 2;
+        window.__dropCount = n;
+      }
+
+      let last = performance.now(), acc = 0;
+      let paused = false;
+      document.addEventListener('visibilitychange', () => {
+        paused = document.hidden;
+        if (!paused) last = performance.now();
+      });
+
+      function fixedUpdate() {
+        applyForces();
+        integrate();
+        mergeDroplets();
+        splitDroplets();
+        updateSoftBodies();
+        autoSpawn();
+        mouseSpawn();
+      }
+
+      (function loop() {
+        if (paused) { requestAnimationFrame(loop); return; }
+        const now = performance.now();
+        const dt = Math.min(now - last, 100);
+        last = now;
+        acc += dt;
+        let g = 0;
+        while (acc >= FIXED_DT_MS && g < 6) { fixedUpdate(); acc -= FIXED_DT_MS; g++; }
+        if (g >= 6) acc = 0;
+        mat.uniforms.uTime.value = now * 0.001;
+        sync();
+        renderer.render(scene, camera);
+        requestAnimationFrame(loop);
+      })();
+
+      window.addEventListener('resize', () => {
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+        aspect = canvas.clientWidth / canvas.clientHeight;
+        mat.uniforms.uRes.value.set(renderer.domElement.width, renderer.domElement.height);
+      });
+
+    }
+
+    /* boot when libraries are ready */
+    let bootTries = 0;
+    function boot() {
+      if (window.THREE) start();
+      else if (bootTries++ < 100) setTimeout(boot, 100);
+    }
+    boot();
   })();
 
   /* ---------- navigation ---------- */
