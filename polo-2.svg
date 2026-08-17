@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560">
+  <rect width="560" height="560" fill="#efefed"/>
+  <!-- manuscript paper -->
+  <g transform="rotate(-4 280 290)">
+    <rect x="140" y="110" width="300" height="390" rx="6" fill="#ffffff" stroke="#2e2e2e" stroke-width="3.5"/>
+    <!-- red margin line, drawn dark to stay achromatic -->
+    <line x1="180" y1="110" x2="180" y2="500" stroke="#9a9a9a" stroke-width="2.4"/>
+    <!-- handwriting script lines -->
+    <g stroke="#2e2e2e" stroke-width="2.8" stroke-linecap="round" fill="none">
+      <path d="M200 160 c14 -8 26 6 38 -2 c10 -6 22 2 32 -4"/>
+      <path d="M200 196 c18 -6 24 8 42 0 c14 -6 28 4 44 -2"/>
+      <path d="M200 232 c12 -8 28 4 40 -2 c12 -6 26 6 38 0"/>
+      <path d="M200 268 c16 -6 30 6 46 -2"/>
+      <path d="M200 340 c14 -8 26 6 38 -2 c12 -6 24 4 36 -2"/>
+      <path d="M200 376 c18 -6 26 8 42 0"/>
+      <path d="M200 412 c14 -8 26 4 40 -2 c12 -4 24 4 34 -2"/>
+    </g>
+    <!-- underline flourish under a "well-written" line -->
+    <path d="M196 300 c30 8 70 6 96 -4" stroke="#2e2e2e" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+    <!-- teacher tick marks -->
+    <g stroke="#2e2e2e" stroke-width="3.4" stroke-linecap="round" fill="none">
+      <path d="M300 322 l8 10 l16 -22"/>
+      <path d="M240 428 l7 9 l14 -19"/>
+    </g>
+  </g>
+  <!-- fountain pen -->
+  <g transform="rotate(30 400 330)">
+    <rect x="352" y="240" width="34" height="200" rx="14" fill="#ffffff" stroke="#2e2e2e" stroke-width="3.6"/>
+    <line x1="352" y1="290" x2="386" y2="290" stroke="#2e2e2e" stroke-width="3"/>
+    <line x1="352" y1="300" x2="386" y2="300" stroke="#2e2e2e" stroke-width="3"/>
+    <rect x="350" y="440" width="38" height="26" rx="6" fill="#ffffff" stroke="#2e2e2e" stroke-width="3.4"/>
+    <path d="M356 466 l26 0 l-13 44 z" fill="#2e2e2e"/>
+    <path d="M364 492 l6 0 l-3 12 z" fill="#efefed" stroke="#2e2e2e" stroke-width="2"/>
+    <circle cx="369" cy="222" r="20" fill="#ffffff" stroke="#2e2e2e" stroke-width="3.6"/>
+    <circle cx="369" cy="222" r="7" fill="#2e2e2e"/>
+  </g>
+  <!-- ink drop -->
+  <path d="M170 470 c-14 18 -22 28 -22 40 a22 22 0 0 0 44 0 c0 -12 -8 -22 -22 -40 z" fill="#2e2e2e"/>
+  <!-- small stars / sparkles of creation -->
+  <g stroke="#2e2e2e" stroke-width="2.6" stroke-linecap="round">
+    <path d="M120 180 l0 22 M109 191 l22 0"/>
+    <path d="M470 130 l0 18 M461 139 l18 0"/>
+    <path d="M455 455 l0 14 M448 462 l14 0"/>
+  </g>
+</svg>
