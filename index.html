@@ -3,10 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IAI — Love and Initiative</title>
+<title>IAI English — 高考英语资料，Hey，是IAI</title>
+<meta name="description" content="IAI English 高考英语资料站：全国各地名校模拟卷、联考卷、首考真题，以及 IAI 原创命题。搜索 + 多维筛选,试题、听力、答案、词汇一站下载,就在IAI。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Long+Cang&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script>
+  /* sequential multi-CDN loader for three.js (China-network friendly) */
+  (function loadThree(urls) {
+    if (!urls.length) return;
+    var sc = document.createElement('script');
+    sc.src = urls[0];
+    sc.onload = function () { if (!window.THREE) loadThree(urls.slice(1)); };
+    sc.onerror = function () { loadThree(urls.slice(1)); };
+    document.head.appendChild(sc);
+  })([
+    'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+    'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js',
+    'https://unpkg.com/three@0.160.1/build/three.min.js'
+  ]);
+</script>
 <style>
   :root {
     --ink: #0a0a0a;
@@ -21,7 +37,6 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; overflow: hidden; }
 
   body {
     font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
@@ -31,7 +46,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ============ COVER ============ */
+  /* ============ COVER: white sheet + glass bubbles ============ */
   #cover {
     position: fixed;
     inset: 0;
@@ -39,7 +54,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
+    z-index: 50;
     transition: opacity 0.9s var(--ease), transform 1.1s var(--ease-spring);
   }
   #cover.opening {
@@ -47,14 +62,12 @@
     transform: scale(1.04);
     pointer-events: none;
   }
-
-  /* the white sheet */
   .sheet {
     position: relative;
     width: min(880px, 92vw);
     height: min(600px, 84vh);
     background: var(--paper);
-    border-radius: 6px;
+    border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
     animation: sheet-in 1.2s var(--ease-spring) 0.1s backwards;
@@ -63,8 +76,6 @@
     from { opacity: 0; transform: translateY(30px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
-  /* subtle paper texture gradient */
   .sheet::before {
     content: "";
     position: absolute;
@@ -72,8 +83,6 @@
     background: radial-gradient(120% 100% at 70% 20%, rgba(0,0,0,0.028) 0%, transparent 55%);
     pointer-events: none;
   }
-
-  /* eyebrow top-center */
   .cv-eyebrow {
     position: absolute;
     top: 56px;
@@ -86,8 +95,6 @@
     color: var(--ink-4);
     animation: fade-up 0.9s var(--ease) 0.4s backwards;
   }
-
-  /* big title center-left */
   .cv-title {
     position: absolute;
     left: 64px;
@@ -97,11 +104,9 @@
     font-size: clamp(3rem, 8.5vw, 5.2rem);
     line-height: 1.04;
     letter-spacing: -0.035em;
-    animation: fade-up 1s var(--ease) 0.55s backwards;
+    animation: fade-up-t 1s var(--ease) 0.55s backwards;
   }
   .cv-title .thin { font-weight: 300; }
-
-  /* sub line under title */
   .cv-sub {
     position: absolute;
     left: 64px;
@@ -112,8 +117,6 @@
     letter-spacing: 0.14em;
     animation: fade-up 1s var(--ease) 0.7s backwards;
   }
-
-  /* liquid glass bubbles canvas — overlays the sheet */
   #bubbleCanvas {
     position: absolute;
     inset: 0;
@@ -125,8 +128,6 @@
     transition: opacity 1.2s var(--ease);
   }
   #bubbleCanvas.on { opacity: 1; }
-
-  /* small caption bottom-left of sheet */
   .cv-caption {
     position: absolute;
     left: 64px;
@@ -139,8 +140,6 @@
     animation: fade-up 1s var(--ease) 0.95s backwards;
   }
   .cv-caption b { color: var(--ink-2); font-weight: 600; }
-
-  /* enter hint bottom-right */
   .cv-enter {
     position: absolute;
     right: 64px;
@@ -159,7 +158,7 @@
     display: inline-flex;
     width: 26px; height: 26px;
     border: 1px solid var(--ink);
-    border-radius: 50%;
+    border-radius: 16px;
     align-items: center; justify-content: center;
     font-size: 0.7rem;
     transition: all 0.3s var(--ease);
@@ -168,18 +167,14 @@
     background: var(--ink); color: #fff;
     transform: translateX(4px);
   }
-
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .cv-title, .cv-sub { position: absolute; }
-  .cv-title { animation-name: fade-up-t; }
   @keyframes fade-up-t {
     from { opacity: 0; transform: translateY(calc(-52% + 14px)); }
     to   { opacity: 1; transform: translateY(-52%); }
   }
-
   @media (max-width: 760px) {
     .cv-title { left: 32px; font-size: 2.6rem; }
     .cv-sub { left: 32px; }
@@ -189,17 +184,8 @@
   }
 
   /* ============ APP ============ */
-  #app {
-    position: fixed;
-    inset: 0;
-    background: var(--paper);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.7s var(--ease) 0.3s;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  #app.visible { opacity: 1; pointer-events: auto; }
+  #app { display: none; }
+  #app.visible { display: block; }
 
   .topbar {
     position: sticky;
@@ -208,7 +194,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 48px;
+    padding: 18px 48px;
     background: rgba(255,255,255,0.92);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -221,212 +207,449 @@
     cursor: pointer;
   }
   .brand .dot { color: var(--ink-4); }
-  .topbar-meta {
-    font-size: 0.66rem;
+  .nav-links {
+    display: flex;
+    gap: 26px;
+    font-size: 0.78rem;
     font-weight: 500;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--ink-4);
-    cursor: pointer;
-    transition: color 0.3s;
+    letter-spacing: 0.04em;
   }
-  .topbar-meta:hover { color: var(--ink); }
+  .nav-links a { color: var(--ink-3); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  @media (max-width: 720px) { .nav-links { display: none; } .topbar { padding: 14px 22px; } }
 
-  .main {
-    max-width: 880px;
+  /* hero */
+  .hero {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-inner {
+    max-width: 1060px;
     margin: 0 auto;
-    padding: 72px 48px 140px;
+    padding: 88px 48px 64px;
+    text-align: left;
   }
-
-  .view { display: none; }
-  .view.active { display: block; animation: view-in 0.55s var(--ease); }
-  @keyframes view-in {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .view-eyebrow {
-    font-size: 0.64rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--ink-4);
-    margin-bottom: 14px;
-  }
-  .view-title {
-    font-size: clamp(1.9rem, 4.5vw, 2.7rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin-bottom: 12px;
-  }
-  .view-desc {
-    font-size: 0.9rem;
-    font-weight: 400;
-    line-height: 1.65;
-    color: var(--ink-3);
-    margin-bottom: 52px;
-    max-width: 540px;
-  }
-
-  .back {
+  .hero-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.8rem;
+    gap: 8px;
+    font-size: 0.68rem;
     font-weight: 600;
-    color: var(--ink-2);
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 40px;
-    letter-spacing: 0.06em;
-    opacity: 0.75;
-    transition: opacity 0.25s;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 18px;
   }
-  .back:hover { opacity: 1; }
+  .pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--ink);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%     { opacity: 0.35; transform: scale(0.8); }
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5.6vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    margin-bottom: 18px;
+  }
+  .hero .hl {
+    font-family: 'Long Cang', 'Noto Sans SC', cursive;
+    font-weight: 400;
+    font-size: 1.04em;
+    letter-spacing: 0.03em;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 2px;
+  }
+  .hero .lead {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink-3);
+    max-width: 620px;
+    margin-bottom: 32px;
+  }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 13px 26px;
+    border-radius: 100px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s var(--ease);
+  }
+  .btn svg { flex-shrink: 0; }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: #222; transform: translateY(-1px); }
+  .btn-ghost { background: var(--paper); color: var(--ink); border: 1px solid var(--ink); }
+  .btn-ghost:hover { background: var(--ink); color: #fff; }
 
-  /* home: editorial rows instead of cards */
-  .index-list { border-top: 1px solid var(--line); }
-  .index-row {
+  .hero-stats {
     display: grid;
-    grid-template-columns: 72px 1fr auto;
-    align-items: baseline;
-    gap: 16px;
-    padding: 34px 8px;
-    border-bottom: 1px solid var(--line);
-    cursor: pointer;
-    transition: background 0.25s, padding-left 0.3s var(--ease);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-top: 48px;
   }
-  .index-row:hover { background: #fafafa; padding-left: 20px; }
-  .index-row .no {
-    font-size: 0.7rem;
-    font-weight: 500;
+  .stat {
+    background: var(--paper);
+    padding: 20px 22px;
+  }
+  .stat b {
+    display: block;
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat span {
+    font-size: 0.68rem;
     color: var(--ink-4);
     letter-spacing: 0.08em;
   }
-  .index-row .name {
-    font-size: 1.7rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+  .stat-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    border-radius: 100px;
+    padding: 10px 20px;
+    letter-spacing: 0.04em;
+    transition: all 0.22s var(--ease);
+    white-space: nowrap;
   }
-  .index-row .name small {
+  .stat-link:hover { background: var(--ink); color: #fff; }
+  @media (max-width: 720px) {
+    .hero-inner { padding: 56px 22px 44px; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .polo { width: 40vw; }
+    .polo-stage { gap: 18px; }
+    .folder { width: 44vw; margin-left: 0; }
+  }
+
+  /* sections */
+  .section { padding: 72px 48px; scroll-margin-top: 64px; }
+  .container { max-width: 1060px; margin: 0 auto; }
+  @media (max-width: 720px) { .section { padding: 52px 22px; } }
+  .section-head { margin-bottom: 36px; }
+  .section-title {
+    font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .section-sub {
+    font-size: 0.88rem;
+    color: var(--ink-3);
+    line-height: 1.65;
+    max-width: 640px;
+  }
+
+  /* polaroid stage */
+  .polo-stage {
+    display: flex;
+    align-items: flex-end;
+    gap: 34px;
+    flex-wrap: wrap;
+    padding: 26px 8px 10px;
+    user-select: none;
+  }
+  .polo {
+    width: 150px;
+    background: var(--paper);
+    padding: 9px 9px 10px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.13), 0 2px 6px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transform: rotate(var(--rot, 0deg));
+    transition: transform 0.3s var(--ease-spring), box-shadow 0.3s var(--ease);
+    will-change: transform;
+  }
+  .polo:hover {
+    transform: rotate(var(--rot, 0deg)) translateY(-8px) scale(1.04);
+    box-shadow: 0 18px 36px rgba(0,0,0,0.18), 0 4px 10px rgba(0,0,0,0.10);
+    z-index: 5;
+  }
+  .polo.gone { display: none; }
+  .polo-img {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--bg);
+    box-shadow: inset 0 8px 20px rgba(0,0,0,0.06), inset 0 -8px 20px rgba(0,0,0,0.06),
+                inset 8px 0 20px rgba(0,0,0,0.04), inset -8px 0 20px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .polo-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
     display: block;
-    font-size: 0.64rem;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  .polo-cap {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 3px 2px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .polo-go {
+    font-size: 0.62rem;
     font-weight: 500;
+    color: var(--ink-3);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .polo-go:hover { color: var(--ink); text-decoration: underline; }
+
+  .folder {
+    position: relative;
+    width: 172px;
+    aspect-ratio: 5 / 4;
+    margin-left: auto;
+    cursor: default;
+    transition: transform 0.35s var(--ease-spring);
+    filter: drop-shadow(0 14px 26px rgba(0,0,0,0.20));
+  }
+  .folder.has-items { cursor: pointer; }
+  .folder.has-items:hover { transform: translateY(-6px) rotate(-2deg); }
+  .folder-body {
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    border-radius: 16px;
+  }
+  .folder-peek {
+    position: absolute;
+    left: 50%;
+    bottom: 46%;
+    width: 86px;
+    height: 58px;
+    background: var(--paper);
+    border-radius: 16px;
+    transform: translateX(-50%) rotate(-5deg);
+    opacity: 0;
+    transition: opacity 0.35s var(--ease), transform 0.35s var(--ease-spring);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  .folder.has-items .folder-peek { opacity: 1; }
+  .folder.has-items:hover .folder-peek { transform: translateX(-50%) rotate(-5deg) translateY(-10px); }
+  .folder-front {
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%; height: 62%;
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 16px;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px 14px;
+    transform-origin: bottom;
+    transition: transform 0.35s var(--ease-spring);
+  }
+  .folder.has-items:hover .folder-front { transform: skewX(4deg) rotateX(8deg); }
+  .folder-front span {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: rgba(255,255,255,0.85);
+    text-transform: lowercase;
+  }
+  .folder-badge {
+    position: absolute;
+    top: -10px; right: -8px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 100px;
+    padding: 3px 10px;
+    font-variant-numeric: tabular-nums;
+    transition: background 0.25s, color 0.25s;
+  }
+  .folder-badge.full { background: var(--ink); color: #fff; }
+
+  .lib-reset {
+    font-family: inherit;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 100px;
+    background: var(--paper);
+    padding: 4px 12px;
+    cursor: pointer;
+    margin-left: 10px;
+    letter-spacing: 0.04em;
+  }
+  .lib-reset:hover { background: var(--ink); color: #fff; }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .more svg { transition: transform 0.25s var(--ease); }
+  .more:hover svg { transform: translateX(4px); }
+
+  .title-en {
+    font-size: 0.64rem;
+    font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--ink-4);
-    margin-top: 6px;
-  }
-  .index-row .arr {
-    font-size: 0.85rem;
-    color: var(--ink-4);
-    transition: transform 0.3s var(--ease), color 0.3s;
-  }
-  .index-row:hover .arr { transform: translateX(6px); color: var(--ink); }
-
-  /* toolbar */
-  .list-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+    margin-left: 14px;
   }
 
-  .search-box {
+  /* original accordion */
+  .original-list { border-top: 2px solid var(--ink); margin-top: 8px; }
+  .acc-section { border-bottom: 1px solid var(--line); background: var(--paper); }
+  .acc-head {
+    display: grid;
+    grid-template-columns: 64px 1fr auto auto;
+    gap: 20px;
+    align-items: baseline;
+    padding: 26px 8px;
+    cursor: pointer;
+    transition: background 0.2s, padding-left 0.3s var(--ease);
+  }
+  .acc-head:hover { background: #fafafa; padding-left: 20px; }
+  .acc-head .no {
+    font-size: 0.72rem; font-weight: 600; color: var(--ink-4);
+    letter-spacing: 0.1em; font-variant-numeric: tabular-nums;
+  }
+  .acc-name { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.015em; }
+  .acc-name small {
+    font-size: 0.6rem; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-4); margin-left: 12px;
+  }
+  .acc-head .count { font-size: 0.7rem; color: var(--ink-4); font-variant-numeric: tabular-nums; }
+  .acc-head .caret { font-size: 0.75rem; color: var(--ink-4); transition: transform 0.35s var(--ease); }
+  .acc-section.open .caret { transform: rotate(90deg); }
+  .acc-body { display: none; }
+  .acc-section.open .acc-body { display: block; }
+
+  /* library */
+  #library { background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .lib-toolbar { margin-bottom: 18px; }
+  .lib-search {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex: 1;
-    max-width: 340px;
-    padding: 10px 16px;
+    width: 100%;
+    max-width: 460px;
+    padding: 11px 18px;
     border-radius: 100px;
     border: 1px solid var(--line);
-    background: #fff;
+    background: var(--bg);
     color: var(--ink-4);
+    margin-bottom: 14px;
     transition: border-color 0.25s;
   }
-  .search-box:focus-within { border-color: var(--ink); }
-  .search-box input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 0.85rem;
-    color: var(--ink);
+  .lib-search:focus-within { border-color: var(--ink); }
+  .lib-search input {
+    flex: 1; border: none; outline: none; background: transparent;
+    font-family: inherit; font-size: 0.85rem; color: var(--ink);
   }
-  .search-box input::placeholder { color: #b5b5b5; }
+  .lib-search input::placeholder { color: #b5b5b5; }
 
-  .sort-group { display: flex; }
-  .sort-btn {
-    font-family: inherit;
-    font-size: 0.76rem;
-    font-weight: 500;
-    padding: 8px 16px;
-    border: none;
-    border-bottom: 2px solid transparent;
-    background: none;
-    color: var(--ink-4);
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    transition: all 0.25s var(--ease);
-  }
-  .sort-btn:hover { color: var(--ink-2); }
-  .sort-btn.active {
-    color: var(--ink);
-    border-bottom-color: var(--ink);
+  .filter-row { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; flex-wrap: wrap; }
+  .filter-label {
+    font-size: 0.66rem;
     font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--ink-4);
+    min-width: 3.5em;
   }
-
-  /* chips */
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-  .chip {
+  .fchips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .fchip {
+    font-family: inherit;
     font-size: 0.74rem;
     font-weight: 500;
-    padding: 7px 16px;
+    padding: 6px 15px;
     border-radius: 100px;
     border: 1px solid var(--line);
-    background: #fff;
+    background: var(--paper);
     color: var(--ink-3);
     cursor: pointer;
-    transition: all 0.22s var(--ease);
+    transition: all 0.2s var(--ease);
   }
-  .chip:hover { border-color: var(--ink-3); }
-  .chip.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .fchip:hover { border-color: var(--ink-3); }
+  .fchip.active { background: var(--ink); border-color: var(--ink); color: #fff; }
 
-  /* resource list — editorial table */
-  .resource-list { border-top: 2px solid var(--ink); }
-  .resource-item {
+  .lib-count {
+    font-size: 0.72rem;
+    color: var(--ink-4);
+    margin: 16px 0 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .paper-list { border-top: 2px solid var(--ink); }
+  .paper-item {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     padding: 20px 6px;
     border-bottom: 1px solid var(--line);
     cursor: pointer;
     transition: background 0.2s, padding-left 0.28s var(--ease);
   }
-  .resource-item:hover { background: #fafafa; padding-left: 16px; }
-  .resource-item .title {
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: 0.005em;
+  .paper-item:hover { background: #fafafa; padding-left: 16px; }
+  .paper-item .p-title { font-size: 0.95rem; font-weight: 500; line-height: 1.45; margin-bottom: 8px; }
+  .paper-item .p-meta {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    font-size: 0.66rem; color: var(--ink-4); letter-spacing: 0.02em;
   }
-  .resource-item .title .yr { color: var(--ink-4); font-weight: 400; margin-right: 8px; font-variant-numeric: tabular-nums; }
-  .resource-item .tag {
-    font-size: 0.68rem;
+  .paper-item .p-meta em { font-style: normal; }
+  .paper-item .p-meta .sep { color: var(--line); }
+  .orig-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+  .p-files { display: flex; gap: 6px; }
+  .file-pill {
+    font-size: 0.62rem;
     font-weight: 500;
     color: var(--ink-3);
-    letter-spacing: 0.03em;
+    border: 1px solid var(--line);
+    padding: 3px 9px;
+    border-radius: 100px;
     white-space: nowrap;
   }
-  .resource-item .tag.jiexi-no { color: #a06a30; }
+  .file-pill.off { opacity: 0.35; text-decoration: line-through; }
+  @media (max-width: 720px) {
+    .paper-item { grid-template-columns: 1fr; gap: 10px; }
+    .p-files { flex-wrap: wrap; }
+  }
 
-  .search-empty {
+  .lib-empty {
     padding: 56px 20px;
     text-align: center;
     font-size: 0.88rem;
@@ -434,159 +657,161 @@
     border-bottom: 1px solid var(--line);
   }
 
-  /* accordion (original) */
-  .acc-section { border-bottom: 1px solid var(--line); }
-  .acc-head {
-    display: grid;
-    grid-template-columns: 72px 1fr auto auto;
-    align-items: baseline;
-    gap: 16px;
-    padding: 26px 8px;
-    cursor: pointer;
-    transition: background 0.2s, padding-left 0.3s var(--ease);
-  }
-  .acc-head:hover { background: #fafafa; padding-left: 20px; }
-  .acc-head .no {
-    font-size: 0.7rem; font-weight: 500; color: var(--ink-4); letter-spacing: 0.08em;
-  }
-  .acc-head .name { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
-  .acc-head .name-en {
-    font-size: 0.62rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-4);
-    margin-left: 12px;
-  }
-  .acc-head .count {
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--ink-4);
-    font-variant-numeric: tabular-nums;
-  }
-  .acc-head .caret {
-    font-size: 0.75rem;
-    color: var(--ink-4);
-    transition: transform 0.35s var(--ease);
-  }
-  .acc-section.open .caret { transform: rotate(90deg); }
-  .acc-body { display: none; }
-  .acc-section.open .acc-body { display: block; }
-  .acc-body .resource-item { background: transparent; }
-  .acc-body .resource-item:hover { background: #fafafa; }
-
-  /* detail */
-  .detail-head { margin-bottom: 36px; }
-  .detail-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 10px;
-    margin-top: 20px;
-  }
-  .meta-pill {
-    font-size: 0.72rem;
-    font-weight: 400;
-    color: var(--ink-3);
-    padding: 5px 13px;
-    border: 1px solid var(--line);
-    border-radius: 100px;
-    background: #fff;
-  }
-  .meta-pill b { font-weight: 600; color: var(--ink); margin-left: 5px; }
-
-  .download-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 22px;
-    padding: 28px 30px;
-    border: 1px solid var(--ink);
-    background: #fff;
-    margin-bottom: 52px;
-    flex-wrap: wrap;
-  }
-  .dl-info { flex: 1; min-width: 220px; }
-  .dl-name { font-size: 1.02rem; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.01em; }
-  .dl-spec { font-size: 0.72rem; font-weight: 400; color: var(--ink-3); letter-spacing: 0.05em; }
-  .dl-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  .dl-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 13px 26px;
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    transition: all 0.22s var(--ease);
-  }
-  .dl-btn.primary {
+  /* original section */
+  #original { background: var(--bg); }
+  .orig-band {
     background: var(--ink);
     color: #fff;
-    border: 1px solid var(--ink);
-  }
-  .dl-btn.primary:hover { background: #222; }
-  .dl-btn.ghost {
-    background: #fff;
-    color: var(--ink);
-    border: 1px solid var(--ink);
-  }
-  .dl-btn.ghost:hover { background: var(--ink); color: #fff; }
-
-  .detail-section { margin-bottom: 44px; }
-  .detail-h {
-    font-size: 0.64rem;
-    font-weight: 600;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--ink-4);
-    margin-bottom: 14px;
-  }
-  .related-list { border-top: 1px solid var(--line); }
-  .related-row {
-    display: flex;
-    justify-content: space-between;
+    border-radius: 0;
+    padding: 40px 36px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
     align-items: center;
-    padding: 17px 6px;
+  }
+  @media (max-width: 720px) { .orig-band { grid-template-columns: 1fr; padding: 30px 24px; } }
+  .orig-band h2 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+  .orig-band h2 span { color: #9a9a9a; font-weight: 300; }
+  .orig-band p { font-size: 0.86rem; color: #c9c9c9; line-height: 1.7; margin-bottom: 20px; }
+  .btn-inverse { background: #fff; color: var(--ink); }
+  .btn-inverse:hover { transform: translateY(-1px); }
+  .orig-stats { display: grid; gap: 10px; }
+  .orig-stat {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+    padding-bottom: 10px;
+    font-size: 0.8rem;
+    color: #c9c9c9;
+  }
+  .orig-stat b { font-size: 1.25rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+
+  /* flower card */
+  .flower-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    border-top: 2px solid var(--ink);
     border-bottom: 1px solid var(--line);
+    padding: 40px 8px;
+    flex-wrap: wrap;
+  }
+  .flower-count b {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    margin-right: 12px;
+  }
+  .flower-count span { font-size: 0.78rem; color: var(--ink-3); letter-spacing: 0.06em; }
+  .flower-note { font-size: 0.84rem; color: var(--ink-3); margin-top: 10px; line-height: 1.6; }
+  .flower-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 100px;
+    padding: 22px 34px;
     cursor: pointer;
-    transition: background 0.2s, padding-left 0.28s var(--ease);
+    transition: all 0.25s var(--ease);
   }
-  .related-row:hover { background: #fafafa; padding-left: 16px; }
-  .related-row .r-name { font-size: 0.92rem; font-weight: 500; }
-  .related-row .r-tag {
-    font-size: 0.66rem;
-    color: var(--ink-4);
-    letter-spacing: 0.04em;
-    white-space: nowrap;
+  .flower-btn:hover { background: var(--ink); color: #fff; transform: translateY(-2px); }
+  .flower-btn:active { transform: scale(0.96); }
+  .flower-btn svg { transition: transform 0.35s var(--ease-spring); }
+  .flower-btn:hover svg { transform: rotate(18deg) scale(1.08); }
+  .flower-fly {
+    position: fixed;
+    pointer-events: none;
+    z-index: 200;
+    animation: fly-up 1.3s var(--ease) forwards;
+  }
+  @keyframes fly-up {
+    0%   { opacity: 0; transform: translate(0,0) scale(0.5) rotate(0deg); }
+    15%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--fx), -140px) scale(1.25) rotate(var(--fr)); }
   }
 
-  .detail-note {
-    font-size: 0.74rem;
-    color: var(--ink-4);
-    line-height: 1.6;
-    letter-spacing: 0.03em;
+  /* exam calendar */
+  .cal-wrap { display: grid; grid-template-columns: 1.45fr 1fr; gap: 36px; align-items: start; }
+  @media (max-width: 860px) { .cal-wrap { grid-template-columns: 1fr; } }
+  .cal-main { border: 1px solid var(--ink); background: var(--paper); 
+  border-radius: 16px;
+  overflow: hidden;}
+  .cal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px; border-bottom: 1px solid var(--ink);
   }
+  .cal-month { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.01em; }
+  .cal-nav {
+    font-family: inherit; background: none; border: 1px solid var(--ink); border-radius: 100px;
+    width: 34px; height: 34px; cursor: pointer; color: var(--ink); font-size: 0.9rem;
+    transition: all 0.2s var(--ease); line-height: 1;
+  }
+  .cal-nav:hover { background: var(--ink); color: #fff; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+  .cal-week > div {
+    padding: 9px 0; text-align: center; font-size: 0.64rem; font-weight: 600;
+    letter-spacing: 0.1em; color: var(--ink-4); border-bottom: 1px solid var(--line);
+  }
+  .cal-cell {
+    position: relative; text-align: center; padding: 13px 0 17px;
+    border-bottom: 1px solid var(--line); cursor: pointer; transition: background 0.15s;
+  }
+  .cal-cell:nth-child(7n) { border-right: none; }
+  .cal-cell:not(.empty):hover { background: var(--bg); }
+  .cal-cell.empty { cursor: default; }
+  .cal-cell span { font-size: 0.84rem; font-variant-numeric: tabular-nums; }
+  .cal-cell.today span { font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+  .cal-cell.sel { background: var(--ink); }
+  .cal-cell.sel span { color: #fff; font-weight: 700; }
+  .cal-cell.sel.today span { text-decoration-color: #fff; }
+  .cal-dot {
+    position: absolute; left: 50%; bottom: 7px; transform: translateX(-50%);
+    width: 5px; height: 5px; border-radius: 50%; background: var(--ink); opacity: 0;
+  }
+  .cal-cell.has-ev .cal-dot { opacity: 1; }
+  .cal-cell.sel .cal-dot { background: #fff; }
+  .cal-side { border-top: 2px solid var(--ink); }
+  .cal-day-name {
+    font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em;
+    padding: 18px 2px 12px; font-variant-numeric: tabular-nums;
+  }
+  .cal-ev { padding: 15px 2px; border-bottom: 1px solid var(--line); }
+  .cal-ev b { display: block; font-size: 0.92rem; font-weight: 600; margin-bottom: 4px; }
+  .cal-ev span { font-size: 0.76rem; color: var(--ink-3); letter-spacing: 0.02em; }
+  .cal-ev-empty { padding: 24px 2px; font-size: 0.84rem; color: var(--ink-4); border-bottom: 1px solid var(--line); }
 
-  .footer {
+  /* CTA band */
+  .cta-band {
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    border-radius: 16px;
+    padding: 44px 36px;
     text-align: center;
-    padding: 40px 20px 48px;
-    font-size: 0.68rem;
-    color: var(--ink-4);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
   }
+  .cta-band h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.02em; }
+  .cta-band p { font-size: 0.85rem; color: var(--ink-3); margin-bottom: 24px; }
 
-  @media (max-width: 720px) {
-    .topbar { padding: 16px 22px; }
-    .main { padding: 48px 22px 90px; }
-    .index-row .name { font-size: 1.35rem; }
-    .download-card { flex-direction: column; align-items: stretch; }
-    .dl-actions { flex-direction: column; }
-    .dl-btn { justify-content: center; }
+  .site-footer {
+    background: var(--ink);
+    color: #8a8a8a;
+    padding: 44px 48px;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
   }
+  .footer-inner {
+    max-width: 1060px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 14px;
+  }
+  .footer-inner b { color: #fff; font-weight: 600; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -598,240 +823,306 @@
 </head>
 <body>
 
-<!-- ========== COVER: white sheet + black sphere ========== -->
+<!-- ========== COVER ========== -->
 <div id="cover">
   <div class="sheet" id="sheet" role="button" tabindex="0" aria-label="Enter IAI">
     <div class="cv-eyebrow">English · Archive · Initiative</div>
     <h1 class="cv-title">Hello,<br><span class="thin">IAIer</span>.</h1>
-    <div class="cv-sub">真题 · 模拟 · 原创写作资料</div>
-
+    <div class="cv-sub">真题 · 模拟 · 原创命题 · 写作</div>
     <canvas id="bubbleCanvas" aria-hidden="true"></canvas>
-
-    <div class="cv-caption">
-      <b>IAI</b> — Love &amp; Initiative
-    </div>
-
+    <div class="cv-caption"><b>IAI</b> — Love &amp; Initiative<br>高考英语资料,就在IAI。</div>
     <div class="cv-enter">Enter <span class="arr">→</span></div>
   </div>
 </div>
 
 <!-- ========== APP ========== -->
 <div id="app">
+
   <div class="topbar">
     <div class="brand" id="homeLink">IAI<span class="dot">.</span></div>
-    <div class="topbar-meta" id="sloganLink">Love &amp; Initiative</div>
+    <nav class="nav-links">
+      <a href="#library">资料中心</a>
+      <a href="#original">IAI 原创</a>
+      <a href="#writing">送一朵花</a>
+      <a href="#calendar">模考日历</a>
+      <a href="#about">关于</a>
+    </nav>
   </div>
 
-  <div class="main">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <span class="hero-eyebrow"><span class="pulse"></span> Love and Initiative · 高考英语备考</span>
+      <h1>高考英语资料，<span class="hl">Hey，是IAI</span></h1>
+      <p class="lead">汇集全国各地名校模拟卷、联考卷、首考真题，以及 IAI 原创命题。按年份、地区、考试类型、题型一键筛选——试题、听力、答案、词汇，一站备齐。</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#library">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          直接找资料
+        </a>
+        <a class="btn btn-ghost" href="#original">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          看 IAI 原创
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b id="st-total">—</b><span>名校卷 &amp; 原创命题</span></div>
+        <div class="stat"><b id="st-orig">—</b><span>IAI 原创命制</span></div>
+        <div class="stat"><b id="st-region">—</b><span>覆盖省市地区</span></div>
+        <div class="stat"><a class="stat-link" href="#calendar">模考日历 →</a></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- HOME -->
-    <div class="view active" id="view-home">
-      <div class="view-eyebrow">Welcome to IAI</div>
-      <h1 class="view-title">今天想看什么?</h1>
-      <p class="view-desc">真题按年份与卷种,模拟卷按省份,原创资料逐篇打磨。搜索、下载,无需注册。</p>
+  <!-- FEATURES: polaroid collection -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">逛逛 IAI<span class="title-en">Gallery</span></h2>
+        <p class="section-sub">三张拍立得,三个入口。点一张,把它收进文件夹;点文件夹,再放它们出来。想直接进去,点拍立得上的小箭头。</p>
+      </div>
+      <div class="polo-stage" id="poloStage">
+        <div class="polo" data-rot="-4" data-href="#library">
+          <div class="polo-img"><img src="polo-1.svg" alt="资料中心:一叠试卷" draggable="false"></div>
+          <div class="polo-cap"><span>资料中心</span><a class="polo-go" href="#library">进入 →</a></div>
+        </div>
+        <div class="polo" data-rot="3" data-href="#original">
+          <div class="polo-img"><img src="polo-2.svg" alt="IAI 原创:钢笔与手稿" draggable="false"></div>
+          <div class="polo-cap"><span>IAI 原创</span><a class="polo-go" href="#original">进入 →</a></div>
+        </div>
+        <div class="polo" data-rot="-2" data-href="#writing">
+          <div class="polo-img"><img src="polo-3.svg" alt="送一朵花:瓶中花" draggable="false"></div>
+          <div class="polo-cap"><span>送一朵花</span><a class="polo-go" href="#writing">进入 →</a></div>
+        </div>
 
-      <div class="index-list">
-        <div class="index-row" onclick="navigate('real')">
-          <div class="no">01</div>
-          <div class="name">高考真题<small>Gaokao Archive</small></div>
-          <div class="arr">→</div>
-        </div>
-        <div class="index-row" onclick="navigate('mock')">
-          <div class="no">02</div>
-          <div class="name">模拟试卷<small>Mock Papers</small></div>
-          <div class="arr">→</div>
-        </div>
-        <div class="index-row" onclick="navigate('original')">
-          <div class="no">03</div>
-          <div class="name">原创资料<small>Essay Craft</small></div>
-          <div class="arr">→</div>
-        </div>
-        <div class="index-row" onclick="navigate('textbook')">
-          <div class="no">04</div>
-          <div class="name">课本资料<small>Textbooks</small></div>
-          <div class="arr">→</div>
+        <div class="folder" id="poloFolder" role="button" tabindex="0" aria-label="文件夹,点击放回拍立得">
+          <div class="folder-peek"></div>
+          <div class="folder-body"></div>
+          <div class="folder-front"><span>memories</span></div>
+          <div class="folder-badge" id="folderBadge">0 / 3</div>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- REAL -->
-    <div class="view" id="view-real">
-      <div class="back" onclick="navigate('home')">
-        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        返回
+  <!-- LIBRARY -->
+  <section class="section" id="library">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">资料中心</h2>
+        <p class="section-sub">关键词搜索，年份 / 地区 / 考试类型 / 题型多维筛选。全部资料免费下载，无需注册。</p>
       </div>
-      <div class="view-eyebrow">Gaokao Archive</div>
-      <h1 class="view-title">高考真题</h1>
-      <p class="view-desc">历年高考真题,按年份与卷种归类。</p>
-
-      <div class="list-toolbar">
-        <div class="search-box">
-          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5"/></svg>
-          <input id="searchReal" type="text" placeholder="搜索:卷种、年份、题型…">
+      <div class="lib-toolbar">
+        <div class="lib-search">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          <input id="libQ" type="text" placeholder="搜索:学校、地区、题型、标签…如「浙江 二模」「听力」">
         </div>
-        <div class="sort-group" id="sortReal">
-          <button class="sort-btn active" data-sort="cohort">按届</button>
-          <button class="sort-btn" data-sort="time">按时间</button>
-          <button class="sort-btn" data-sort="heat">按热度</button>
+        <div class="filter-row">
+          <span class="filter-label">年份</span>
+          <div class="fchips" id="fYear"></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">地区</span>
+          <div class="fchips" id="fRegion"></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">类型</span>
+          <div class="fchips" id="fType"></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">题型</span>
+          <div class="fchips" id="fPtype"></div>
         </div>
       </div>
-
-      <div class="chips" id="realChips">
-        <div class="chip active">All</div>
-        <div class="chip">新高考 I</div>
-        <div class="chip">新高考 II</div>
-        <div class="chip">全国甲卷</div>
-        <div class="chip">北京</div>
-        <div class="chip">天津</div>
-        <div class="chip">浙江</div>
-      </div>
-
-      <div class="resource-list" id="realList"></div>
+      <div class="lib-count"><span id="libCount"></span> <button class="lib-reset" id="libReset" style="display:none;" onclick="clearOriginal(event)">显示全部资料</button></div>
+      <div class="paper-list" id="paperList"></div>
     </div>
+  </section>
 
-    <!-- MOCK -->
-    <div class="view" id="view-mock">
-      <div class="back" onclick="navigate('home')">
-        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        返回
+  <!-- ORIGINAL (standalone, separate from papers) -->
+  <section class="section" id="original">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">IAI 原创<span class="title-en">Essay Craft</span></h2>
+        <p class="section-sub">应用文与读后续写的深度内容库——逐篇手工打磨,和试卷分开,单独更新。</p>
       </div>
-      <div class="view-eyebrow">Mock Papers</div>
-      <h1 class="view-title">模拟试卷</h1>
-      <p class="view-desc">精选模拟卷,按省份与来源成套存放。</p>
-
-      <div class="list-toolbar">
-        <div class="search-box">
-          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5"/></svg>
-          <input id="searchMock" type="text" placeholder="搜索:省份、学校、题型…">
+      <!-- the four-category list itself -->
+      <div id="original-acc" class="original-list">
+        <div class="acc-section open">
+          <div class="acc-head" onclick="this.parentElement.classList.toggle('open')">
+            <div class="no">01</div>
+            <div class="acc-name">应用文解析<small>Applied Writing</small></div>
+            <div class="count">3 篇</div>
+            <div class="caret">→</div>
+          </div>
+          <div class="acc-body">
+            <div class="paper-list" style="border-top:none;">
+              <div class="paper-item"><div>
+                <div class="p-title">2026 新高考 I 卷 · 应用文真题解析</div>
+                <div class="p-meta"><em>题目拆解</em><span class="sep">/</span><em>范文</em><span class="sep">/</span><em>评分标准</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+              <div class="paper-item"><div>
+                <div class="p-title">2026 杭州二模 · 应用文解析</div>
+                <div class="p-meta"><em>题目拆解</em><span class="sep">/</span><em>范文</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+              <div class="paper-item"><div>
+                <div class="p-title">应用文审题三步法 · 讲义</div>
+                <div class="p-meta"><em>方法</em><span class="sep">/</span><em>例题</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+            </div>
+          </div>
         </div>
-        <div class="sort-group" id="sortMock">
-          <button class="sort-btn active" data-sort="cohort">按届</button>
-          <button class="sort-btn" data-sort="time">按时间</button>
-          <button class="sort-btn" data-sort="heat">按热度</button>
+        <div class="acc-section">
+          <div class="acc-head" onclick="this.parentElement.classList.toggle('open')">
+            <div class="no">02</div>
+            <div class="acc-name">续写解析<small>Continuation Writing</small></div>
+            <div class="count">2 篇</div>
+            <div class="caret">→</div>
+          </div>
+          <div class="acc-body">
+            <div class="paper-list" style="border-top:none;">
+              <div class="paper-item"><div>
+                <div class="p-title">2026 新高考 I 卷 · 读后续写解析</div>
+                <div class="p-meta"><em>情节推演</em><span class="sep">/</span><em>范文</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+              <div class="paper-item"><div>
+                <div class="p-title">2026 Z20 二次联考 · 读后续写解析</div>
+                <div class="p-meta"><em>情节推演</em><span class="sep">/</span><em>语言打磨</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-section">
+          <div class="acc-head" onclick="this.parentElement.classList.toggle('open')">
+            <div class="no">03</div>
+            <div class="acc-name">应用文语料<small>Applied Corpus</small></div>
+            <div class="count">3 篇</div>
+            <div class="caret">→</div>
+          </div>
+          <div class="acc-body">
+            <div class="paper-list" style="border-top:none;">
+              <div class="paper-item"><div>
+                <div class="p-title">建议信 · 高频句式与措辞</div>
+                <div class="p-meta"><em>句式</em><span class="sep">/</span><em>语气</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+              <div class="paper-item"><div>
+                <div class="p-title">邀请信 · 开头与结尾</div>
+                <div class="p-meta"><em>模板</em><span class="sep">/</span><em>变体</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+              <div class="paper-item"><div>
+                <div class="p-title">通知 · 常用表达</div>
+                <div class="p-meta"><em>模板</em><span class="sep">/</span><em>变体</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-section">
+          <div class="acc-head" onclick="this.parentElement.classList.toggle('open')">
+            <div class="no">04</div>
+            <div class="acc-name">续写语料<small>Continuation Corpus</small></div>
+            <div class="count">3 篇</div>
+            <div class="caret">→</div>
+          </div>
+          <div class="acc-body">
+            <div class="paper-list" style="border-top:none;">
+              <div class="paper-item"><div>
+                <div class="p-title">心理描写 · 词汇块</div>
+                <div class="p-meta"><em>情绪</em><span class="sep">/</span><em>心理</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+              <div class="paper-item"><div>
+                <div class="p-title">环境描写 · 词汇块</div>
+                <div class="p-meta"><em>场景</em><span class="sep">/</span><em>氛围</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+              <div class="paper-item"><div>
+                <div class="p-title">无灵主语 · 句式块</div>
+                <div class="p-meta"><em>句式</em><span class="sep">/</span><em>升格</em></div>
+              </div><div class="p-files"><span class="file-pill">PDF</span></div></div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="chips" id="mockChips">
-        <div class="chip active">All</div>
-        <div class="chip">浙江</div>
-        <div class="chip">江苏</div>
-        <div class="chip">名校联考</div>
-      </div>
-
-      <div class="resource-list" id="mockList"></div>
     </div>
+  </section>
 
-    <!-- ORIGINAL -->
-    <div class="view" id="view-original">
-      <div class="back" onclick="navigate('home')">
-        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        返回
+  <!-- WRITING -> 送一朵花 -->
+  <section class="section" id="writing" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">送一朵花<span class="title-en">A Flower for You</span></h2>
+        <p class="section-sub">来都来了，送你一朵花。</p>
       </div>
-      <div class="view-eyebrow">Essay Craft</div>
-      <h1 class="view-title">原创资料</h1>
-      <p class="view-desc">应用文与续写的解析、语料、小专题,逐篇手工打磨。</p>
-
-      <div class="list-toolbar">
-        <div class="search-box">
-          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5"/></svg>
-          <input id="searchOriginal" type="text" placeholder="搜索:专题、题型、语料…">
+      <div class="flower-card" id="flowerCard">
+        <div class="flower-left">
+          <div class="flower-count"><b id="flowerCount">—</b><span>朵花已被送出</span></div>
+          <p class="flower-note">来都来了，送你一朵花。</p>
         </div>
+        <button class="flower-btn" id="flowerBtn" aria-label="送一朵花">
+          <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="16" r="4.2"/>
+            <ellipse cx="24" cy="7.5" rx="4.4" ry="5.4"/>
+            <ellipse cx="32.4" cy="12.4" rx="5.4" ry="4.4" transform="rotate(52 32.4 12.4)"/>
+            <ellipse cx="32.4" cy="21.6" rx="5.4" ry="4.4" transform="rotate(128 32.4 21.6)"/>
+            <ellipse cx="15.6" cy="21.6" rx="5.4" ry="4.4" transform="rotate(52 15.6 21.6)"/>
+            <ellipse cx="15.6" cy="12.4" rx="5.4" ry="4.4" transform="rotate(128 15.6 12.4)"/>
+            <path d="M24 26v13"/>
+            <path d="M24 32c-5-1.5-8-4.5-9-8 4 0 7 2 9 5 2-3 5-5 9-5-1 3.5-4 6.5-9 8z"/>
+          </svg>
+          <span>送一朵花</span>
+        </button>
       </div>
-
-      <div id="originalAccordion"></div>
     </div>
+  </section>
 
-    <!-- TEXTBOOK -->
-    <div class="view" id="view-textbook">
-      <div class="back" onclick="navigate('home')">
-        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        返回
+<!-- CALENDAR -->
+  <section class="section" id="calendar" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">模考日历<span class="title-en">Exam Calendar</span></h2>
+        <p class="section-sub">沿高考日历标记的重要考试日:摸底、月考、联考、一模二模、首考与高考。点带圆点的日期查看当天安排。</p>
       </div>
-      <div class="view-eyebrow">Textbooks</div>
-      <h1 class="view-title">课本资料</h1>
-      <p class="view-desc">主流教材版本的配套资料,按版本与册别归类。</p>
-
-      <div class="list-toolbar">
-        <div class="search-box">
-          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5"/></svg>
-          <input id="searchTextbook" type="text" placeholder="搜索:版本、册别、单元…">
+      <div class="cal-wrap">
+        <div class="cal-main">
+          <div class="cal-head">
+            <button class="cal-nav" id="calPrev" aria-label="上个月">←</button>
+            <div class="cal-month" id="calMonth"></div>
+            <button class="cal-nav" id="calNext" aria-label="下个月">→</button>
+          </div>
+          <div class="cal-grid cal-week">
+            <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
+          </div>
+          <div class="cal-grid" id="calDays"></div>
         </div>
-        <div class="sort-group" id="sortTextbook">
-          <button class="sort-btn active" data-sort="cohort">按届</button>
-          <button class="sort-btn" data-sort="time">按时间</button>
-          <button class="sort-btn" data-sort="heat">按热度</button>
-        </div>
+        <aside class="cal-side">
+          <div class="cal-day-name" id="calDayName"></div>
+          <div id="calEvents"></div>
+        </aside>
       </div>
-
-      <div class="chips" id="textbookChips">
-        <div class="chip active">All</div>
-        <div class="chip">人教版</div>
-        <div class="chip">外研版</div>
-        <div class="chip">北师大版</div>
-        <div class="chip">译林版</div>
-      </div>
-
-      <div class="resource-list" id="textbookList"></div>
     </div>
+  </section>
 
-    <!-- DETAIL -->
-    <div class="view" id="view-detail">
-      <div class="back" id="detailBack">
-        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        返回
-      </div>
-
-      <div class="detail-head">
-        <div class="view-eyebrow" id="detailEyebrow">Gaokao Archive</div>
-        <h1 class="view-title" id="detailTitle">标题</h1>
-        <div class="detail-meta" id="detailMeta"></div>
-      </div>
-
-      <div class="download-card">
-        <div class="dl-info">
-          <div class="dl-name" id="dlName">文件.pdf</div>
-          <div class="dl-spec" id="dlSpec">PDF</div>
-        </div>
-        <div class="dl-actions">
-          <button class="dl-btn primary" id="dlBtn">
-            <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true"><path d="M7 1v8M3.5 5.5 7 9l3.5-3.5M2 12.5h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="dl-label">下载试卷</span>
-          </button>
-          <button class="dl-btn ghost" id="dlBtn2" style="display:none;">
-            <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true"><path d="M7 1v8M3.5 5.5 7 9l3.5-3.5M2 12.5h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            下载解析
-          </button>
+<!-- CTA -->
+  <section class="section" id="about" style="padding-top:0;">
+    <div class="container">
+      <div class="cta-band">
+        <h2>找不到想要的卷子？或想加入我们一起做</h2>
+        <p>关注 IAI 公众号获取最新资料与更新。</p>
+        <div class="hero-cta" style="justify-content:center;">
+          <a class="btn btn-primary" href="#library">回资料中心</a>
+          <a class="btn btn-ghost" href="#original">看 IAI 原创</a>
         </div>
       </div>
-
-      <div class="detail-section">
-        <div class="detail-h">相关资料</div>
-        <div class="related-list" id="detailRelated"></div>
-      </div>
-
-      <p class="detail-note">演示占位文件,正式上线时接入真实下载渠道。</p>
     </div>
+  </section>
 
-  </div>
-
-  <div class="footer">© 2026 IAI · Love &amp; Initiative</div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><b>IAI English</b> · Love and Initiative</div>
+      <div>© 2026 IAI · 高考英语资料站</div>
+    </div>
+  </footer>
 </div>
 
-<script>
-  /* sequential multi-CDN loader for three.js (China-network friendly) */
-  (function loadThree(urls) {
-    if (!urls.length) return; /* bubbles simply won't start; site still works */
-    var sc = document.createElement('script');
-    sc.src = urls[0];
-    sc.onload = function () { if (!window.THREE) loadThree(urls.slice(1)); };
-    sc.onerror = function () { loadThree(urls.slice(1)); };
-    document.head.appendChild(sc);
-  })([
-    'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
-    'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js',
-    'https://unpkg.com/three@0.160.1/build/three.min.js'
-  ]);
-</script>
+<script src="papers.js"></script>
 <script>
   /* ---------- cover ---------- */
   const cover = document.getElementById('cover');
@@ -839,13 +1130,27 @@
   function enterApp() {
     cover.classList.add('opening');
     app.classList.add('visible');
+    document.body.style.overflow = '';
+    fillStats();
   }
+  document.body.style.overflow = 'hidden';
   document.getElementById('sheet').addEventListener('click', enterApp);
   document.getElementById('sheet').addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterApp(); }
   });
+  document.getElementById('homeLink').addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  document.querySelectorAll('.nav-links a, .hero-cta a, .feature .more, .cta-band a').forEach(a => {
+    a.addEventListener('click', () => {
+      if (libState.originalOnly && !a.dataset.keepFilter) {
+        libState.originalOnly = false;
+        renderLibrary();
+      }
+    });
+  });
 
-  /* ---------- liquid glass bubbles (metaball refraction) ---------- */
+  /* ---------- liquid glass bubbles ---------- */
   (function liquidGlass() {
     const canvas = document.getElementById('bubbleCanvas');
     if (!canvas) return;
@@ -855,23 +1160,17 @@
 
     const MAX_DROPLETS = 40;
     const FIXED_DT_MS = 8;
+    let renderer = null, scene = null, camera = null;
 
-    let renderer = null;
-    let scene = null;
-    let camera = null;
-
-    /* start once three is ready */
     let started = false;
     function start() {
       if (started) return;
       started = true;
-
       renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
       renderer.setClearColor(0x000000, 0);
       renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
       scene = new THREE.Scene();
       camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
       renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 
       const bgCanvas2 = document.createElement('canvas');
@@ -879,11 +1178,9 @@
       const bgTexture = new THREE.CanvasTexture(bgCanvas2);
       bgTexture.minFilter = THREE.LinearFilter;
       bgTexture.magFilter = THREE.LinearFilter;
-      bgTexture.flipY = true;    /* canvas row0(top) -> v=1, matches flipped uv below */
+      bgTexture.flipY = true;
 
-    /* draw the sheet's typography into the refraction texture,
-         replicating the DOM text node-by-node (positions/sizes/weights read live) */
-        function drawBackgroundFromDOM() {
+      function drawBackgroundFromDOM() {
         const w = renderer.domElement.width;
         const h = renderer.domElement.height;
         bgCanvas2.width = w; bgCanvas2.height = h;
@@ -891,16 +1188,12 @@
         bgCtx2.fillRect(0, 0, w, h);
         const dpr = w / canvas.clientWidth;
         const sheetRect = sheet.getBoundingClientRect();
-
         function px(sel, fn) {
           const el = document.querySelector(sel);
           if (!el) return;
           fn(el, getComputedStyle(el), el.getBoundingClientRect());
         }
-
         bgCtx2.textBaseline = 'middle';
-
-        /* eyebrow */
         px('.cv-eyebrow', (el, st, r) => {
           const size = parseFloat(st.fontSize) * dpr;
           bgCtx2.font = `${st.fontWeight} ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
@@ -910,8 +1203,6 @@
           bgCtx2.fillText(el.textContent.trim(), (r.left - sheetRect.left + r.width/2) * dpr, (r.top - sheetRect.top + r.height/2) * dpr);
           bgCtx2.letterSpacing = '0px';
         });
-
-        /* title: two lines, "Hello," 800 / "IAIer." 300 */
         px('.cv-title', (el, st, r) => {
           const size = parseFloat(st.fontSize) * dpr;
           const lh = size * 1.04;
@@ -925,55 +1216,48 @@
           bgCtx2.font = `300 ${size}px ${family}`;
           bgCtx2.fillText('IAIer.', x, y0 + lh * 1.5);
         });
-
-        /* sub */
         px('.cv-sub', (el, st, r) => {
           const size = parseFloat(st.fontSize) * dpr;
           bgCtx2.textAlign = 'left';
-          bgCtx2.letterSpacing = (0.14 * size) + 'px';
+          try { bgCtx2.letterSpacing = (0.14 * size) + 'px'; } catch(e) {}
           bgCtx2.font = `${st.fontWeight} ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
           bgCtx2.fillStyle = st.color;
           bgCtx2.fillText(el.textContent.trim(), (r.left - sheetRect.left) * dpr, (r.top - sheetRect.top + r.height/2) * dpr);
           bgCtx2.letterSpacing = '0px';
         });
-
-        /* caption (2 lines: b + text) */
         px('.cv-caption', (el, st, r) => {
           const size = parseFloat(st.fontSize) * dpr;
-          const lh = parseFloat(st.lineHeight || 1.7) * size / 1 || size * 1.7;
+          const lh = size * 1.7;
           const x = (r.left - sheetRect.left) * dpr;
           const y0 = (r.top - sheetRect.top) * dpr;
           bgCtx2.textAlign = 'left';
-          bgCtx2.letterSpacing = (0.08 * size) + 'px';
+          try { bgCtx2.letterSpacing = (0.08 * size) + 'px'; } catch(e) {}
           bgCtx2.font = `600 ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
           bgCtx2.fillStyle = getComputedStyle(document.querySelector('.cv-caption b')).color;
           bgCtx2.fillText('IAI — Love & Initiative', x, y0 + lh * 0.5);
+          bgCtx2.font = `400 ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
+          bgCtx2.fillStyle = st.color;
+          bgCtx2.fillText('高考英语资料,Hey，是IAI。', x, y0 + lh * 1.5);
           bgCtx2.letterSpacing = '0px';
         });
-
-        /* enter hint */
         px('.cv-enter', (el, st, r) => {
           const size = parseFloat(st.fontSize) * dpr;
           bgCtx2.textAlign = 'right';
-          bgCtx2.letterSpacing = (0.22 * size) + 'px';
+          try { bgCtx2.letterSpacing = (0.22 * size) + 'px'; } catch(e) {}
           bgCtx2.font = `${st.fontWeight} ${size}px ${st.fontFamily.split(',')[0]}, sans-serif`;
           bgCtx2.fillStyle = st.color;
           bgCtx2.fillText('ENTER', (r.left - sheetRect.left + r.width) * dpr, (r.top - sheetRect.top + r.height/2) * dpr);
           bgCtx2.letterSpacing = '0px';
         });
-
         bgTexture.needsUpdate = true;
       }
 
-      /* boot: paint a white backdrop immediately (a 0×0 canvas texture samples black),
-         then redraw with typography once fonts settle, then reveal bubbles */
       drawBackgroundFromDOM();
       document.fonts.ready.then(() => setTimeout(() => {
         drawBackgroundFromDOM();
         canvas.classList.add('on');
       }, 300));
 
-      /* droplet buffers */
       const MAX_ENTRIES = MAX_DROPLETS * 2;
       const dropletBuf = new Float32Array(MAX_ENTRIES * 4);
       const dropletTex = new THREE.DataTexture(dropletBuf, MAX_ENTRIES, 1, THREE.RGBAFormat, THREE.FloatType);
@@ -1003,9 +1287,6 @@
       }
 
       let aspect = canvas.clientWidth / canvas.clientHeight;
-
-      /* seed bubbles across the whole sheet — they drift over the text
-         so the refraction warping stays visible */
       for (let i = 0; i < 12; i++) {
         spawn(
           (Math.random() - 0.5) * aspect * 0.72,
@@ -1014,7 +1295,6 @@
         );
       }
 
-      /* shader */
       const vertSrc = `void main(){ gl_Position = vec4(position, 1.0); }`;
       const fragSrc = `
 precision highp float;
@@ -1025,8 +1305,8 @@ uniform sampler2D uBg;
 uniform int       uCount;
 uniform float     uTime;
 void main(){
-  vec2  frag = gl_FragCoord.xy / uRes;      /* bottom-up */
-  vec2  uv   = vec2(frag.x, 1.0 - frag.y);  /* texture-space (top-down) */
+  vec2  frag = gl_FragCoord.xy / uRes;
+  vec2  uv   = vec2(frag.x, 1.0 - frag.y);
   float asp  = uRes.x / uRes.y;
   vec2  p    = (frag - 0.5) * vec2(asp, 1.0);
   float field = 0.0;
@@ -1057,6 +1337,11 @@ void main(){
   vec2  refractDir = (lensLen > 1e-5) ? lens / lensLen : vec2(0.0);
   float refractMask = smoothstep(thr - 0.2, thr + 1.5, field);
   vec2  refractedUV = clamp(uv + refractDir * mappedLens * refractMask, 0.001, 0.999);
+  float caStr = 0.0018 * edge;
+  vec3 bgCA;
+  bgCA.r = texture2D(uBg, refractedUV + vec2(caStr, caStr * 0.5)).r;
+  bgCA.g = texture2D(uBg, refractedUV).g;
+  bgCA.b = texture2D(uBg, refractedUV - vec2(caStr, caStr * 0.5)).b;
   float gradLen = length(grad);
   float nScale = atan(gradLen * 0.5) * 0.3;
   vec2  nGrad  = (gradLen > 1e-4) ? (grad / gradLen) * nScale : vec2(0.0);
@@ -1069,32 +1354,20 @@ void main(){
   float cosTheta = max(dot(N, V), 0.0);
   float fresnel  = 0.04 + 0.96 * pow(1.0 - cosTheta, 4.0);
   float rim = smoothstep(thr + 0.6, thr, field) * edge;
-  float caStr = 0.0018 * edge;
-  vec3 bgCA;
-  bgCA.r = texture2D(uBg, refractedUV + vec2(caStr, caStr * 0.5)).r;
-  bgCA.g = texture2D(uBg, refractedUV).g;
-  bgCA.b = texture2D(uBg, refractedUV - vec2(caStr, caStr * 0.5)).b;
-  /* clear glass over white paper: visible via dark rim, slight interior
-     darkening, specular dot, and drop shadow — like real clear glass */
   float depth = smoothstep(thr, thr + 3.0, field);
-  vec3 glassColor = bgCA * 0.965;                       /* slight darkening vs page */
-  glassColor = mix(glassColor, glassColor * vec3(0.955, 0.975, 1.0), depth * 0.6); /* cool depth */
-  glassColor *= 1.0 - fresnel * 0.10;                    /* edges pick up less light */
-  glassColor += vec3(1.0) * spec * 0.95;                 /* white specular dot */
+  vec3 glassColor = bgCA * 0.965;
+  glassColor = mix(glassColor, glassColor * vec3(0.955, 0.975, 1.0), depth * 0.6);
+  glassColor *= 1.0 - fresnel * 0.10;
+  glassColor += vec3(1.0) * spec * 0.95;
   glassColor += vec3(0.9, 0.95, 1.0) * rim * 0.10;
-
-  /* thin DARK rim ring — the main outline that reads on white */
   float borderOuter = smoothstep(thr - 0.12, thr - 0.02, field);
   float borderInner = smoothstep(thr + 0.0, thr + 0.05, field);
   float border = borderOuter * (1.0 - borderInner);
   glassColor = mix(glassColor, vec3(0.52, 0.56, 0.62), border * 0.55);
-
-  /* soft shadow outside the glass (down-right) */
   vec2 shDir = normalize(vec2(0.55, -0.83));
   float dirW = clamp(0.5 - dot(normalize(lens + vec2(1e-5)), -shDir) * 0.5, 0.0, 1.0);
   float sh = smoothstep(0.22, 0.9, field) * (1.0 - edge);
   vec3 shadowCol = vec3(0.40, 0.44, 0.52) * sh * (0.16 + 0.30 * dirW);
-
   vec3 col = glassColor * edge + shadowCol;
   float alphaOut = max(edge, sh * 0.46);
   gl_FragColor = vec4(col, alphaOut);
@@ -1113,7 +1386,6 @@ void main(){
       });
       scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
 
-      /* input — mapped to sheet-local coordinates */
       const mouse = { x: 999, y: 999, active: false, down: false };
       let spawnCD = 0;
       sheet.addEventListener('pointermove', (e) => {
@@ -1127,21 +1399,13 @@ void main(){
       window.addEventListener('pointerup', () => { mouse.down = false; });
       sheet.addEventListener('pointerleave', () => { mouse.active = false; mouse.down = false; });
 
-      /* physics params */
-      const DAMP = 0.993;
-      const MOUSE_R = 0.18;
-      const MOUSE_F = 0.004;
-      const TENSION_RANGE = 0.12;
-      const TENSION_F = 0.0004;
-      const MERGE_RATIO = 0.62;
-      const SPLIT_SPEED = 0.013;
-      const SPLIT_MIN_R = 0.04;
-      const MAX_SPEED = 0.015;
-      const BOUNCE = 0.4;
-      const WANDER_F = 0.00004;
-      const CENTER_PULL = 0.000008;
+      const DAMP = 0.993, MOUSE_R = 0.18, MOUSE_F = 0.004;
+      const TENSION_RANGE = 0.12, TENSION_F = 0.0004;
+      const MERGE_RATIO = 0.62, SPLIT_SPEED = 0.013, SPLIT_MIN_R = 0.04;
+      const MAX_SPEED = 0.015, BOUNCE = 0.4;
+      const WANDER_F = 0.00004, CENTER_PULL = 0.000008;
 
-      function applyForces(time) {
+      function applyForces() {
         for (const d of drops) {
           d.wanderAngle += (Math.random() - 0.5) * d.wanderSpeed;
           d.vx += Math.cos(d.wanderAngle) * WANDER_F;
@@ -1149,8 +1413,7 @@ void main(){
           d.vx -= d.x * CENTER_PULL * 0.5;
           d.vy -= d.y * CENTER_PULL;
           if (mouse.active) {
-            const dx = d.x - mouse.x;
-            const dy = d.y - mouse.y;
+            const dx = d.x - mouse.x, dy = d.y - mouse.y;
             const dSq = dx * dx + dy * dy;
             const rr = MOUSE_R + d.r;
             if (dSq < rr * rr && dSq > 1e-5) {
@@ -1173,20 +1436,21 @@ void main(){
               const dist = Math.sqrt(dSq);
               const s = 1 - dist / rng;
               const f = s * TENSION_F;
-              a.vx += (dx / dist) * f; a.vy += (dy / dist) * f;
-              b.vx -= (dx / dist) * f; b.vy -= (dy / dist) * f;
+              const fx = (dx / dist) * f, fy = (dy / dist) * f;
+              a.vx += fx; a.vy += fy;
+              b.vx -= fx; b.vy -= fy;
             }
           }
         }
       }
 
       function integrate() {
-        const wx = aspect * 0.5, wy = 0.5;
         for (const d of drops) {
           const sp = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
           if (sp > MAX_SPEED) { const s = MAX_SPEED / sp; d.vx *= s; d.vy *= s; }
           d.x += d.vx; d.y += d.vy;
           d.vx *= DAMP; d.vy *= DAMP;
+          const wx = aspect * 0.5, wy = 0.5;
           if (d.x - d.r < -wx) { d.x = -wx + d.r; d.vx = Math.abs(d.vx) * BOUNCE; }
           if (d.x + d.r > wx)  { d.x = wx - d.r;  d.vx = -Math.abs(d.vx) * BOUNCE; }
           if (d.y - d.r < -wy) { d.y = -wy + d.r; d.vy = Math.abs(d.vy) * BOUNCE; }
@@ -1215,7 +1479,7 @@ void main(){
             }
           }
         }
-        drops = drops.filter(d => d.alive);
+        drops = drops.filter((d) => d.alive);
       }
 
       function splitDroplets() {
@@ -1231,10 +1495,13 @@ void main(){
           d.r = nr; d.area = ha;
           d.x -= nx * off; d.y -= ny * off;
           add.push({
-            id: uid++, x: d.x + nx * off * 2, y: d.y + ny * off * 2, r: nr, area: ha,
-            vx: d.vx + nx * sp * 0.35, vy: d.vy + ny * sp * 0.35, alive: true,
-            wanderAngle: Math.random() * Math.PI * 2, wanderSpeed: 0.3 + Math.random() * 0.5,
-            softPrevX: d.x, softPrevY: d.y, softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0,
+            id: uid++, x: d.x + nx * off * 2, y: d.y + ny * off * 2,
+            r: nr, area: ha,
+            vx: d.vx + nx * sp * 0.35, vy: d.vy + ny * sp * 0.35,
+            alive: true,
+            wanderAngle: Math.random() * Math.PI * 2,
+            wanderSpeed: 0.3 + Math.random() * 0.5,
+            softPrevX: 0, softPrevY: 0, softOffX: 0, softOffY: 0, softVelX: 0, softVelY: 0,
           });
         }
         for (const a of add) if (drops.length < MAX_DROPLETS) drops.push(a);
@@ -1245,11 +1512,7 @@ void main(){
         autoTimer += FIXED_DT_MS;
         if (autoTimer > 2000 && drops.length < 10) {
           autoTimer = 0;
-          spawn(
-            (Math.random() - 0.5) * aspect * 0.6,
-            (Math.random() - 0.5) * 0.6,
-            0.014 + Math.random() * 0.018
-          );
+          spawn((Math.random() - 0.5) * aspect * 0.6, (Math.random() - 0.5) * 0.6, 0.014 + Math.random() * 0.018);
         }
       }
 
@@ -1258,24 +1521,7 @@ void main(){
         spawnCD -= FIXED_DT_MS;
         if (spawnCD <= 0 && drops.length < MAX_DROPLETS) {
           spawnCD = 120;
-          spawn(
-            mouse.x + (Math.random() - 0.5) * 0.02,
-            mouse.y + (Math.random() - 0.5) * 0.02,
-            0.012 + Math.random() * 0.010
-          );
-        }
-      }
-
-      const SOFT_STIFFNESS = 0.22;
-      const SOFT_DAMPING = 0.6;
-      function updateSoftBodies() {
-        for (const d of drops) {
-          const dx = d.x - d.softPrevX, dy = d.y - d.softPrevY;
-          d.softVelX += (dx - d.softOffX) * SOFT_STIFFNESS;
-          d.softVelY += (dy - d.softOffY) * SOFT_STIFFNESS;
-          d.softVelX *= SOFT_DAMPING; d.softVelY *= SOFT_DAMPING;
-          d.softOffX += d.softVelX; d.softOffY += d.softVelY;
-          d.softPrevX = d.x; d.softPrevY = d.y;
+          spawn(mouse.x + (Math.random() - 0.5) * 0.02, mouse.y + (Math.random() - 0.5) * 0.02, 0.012 + Math.random() * 0.010);
         }
       }
 
@@ -1288,12 +1534,10 @@ void main(){
           dropletBuf[i * 4 + 1] = d.y;
           dropletBuf[i * 4 + 2] = d.r;
           dropletBuf[i * 4 + 3] = 1;
-          const ghostScale = 0.7;
-          const trailStr = 3.5;
           const gi = (n + i) * 4;
-          dropletBuf[gi] = d.x - d.softOffX * trailStr;
-          dropletBuf[gi + 1] = d.y - d.softOffY * trailStr;
-          dropletBuf[gi + 2] = d.r * ghostScale;
+          dropletBuf[gi] = d.x - d.softOffX * 3.5;
+          dropletBuf[gi + 1] = d.y - d.softOffY * 3.5;
+          dropletBuf[gi + 2] = d.r * 0.7;
           dropletBuf[gi + 3] = 1;
         }
         dropletTex.needsUpdate = true;
@@ -1301,23 +1545,11 @@ void main(){
         window.__dropCount = n;
       }
 
-      let last = performance.now(), acc = 0;
-      let paused = false;
+      let last = performance.now(), acc = 0, paused = false;
       document.addEventListener('visibilitychange', () => {
         paused = document.hidden;
         if (!paused) last = performance.now();
       });
-
-      function fixedUpdate() {
-        applyForces();
-        integrate();
-        mergeDroplets();
-        splitDroplets();
-        updateSoftBodies();
-        autoSpawn();
-        mouseSpawn();
-      }
-
       (function loop() {
         if (paused) { requestAnimationFrame(loop); return; }
         const now = performance.now();
@@ -1325,7 +1557,19 @@ void main(){
         last = now;
         acc += dt;
         let g = 0;
-        while (acc >= FIXED_DT_MS && g < 6) { fixedUpdate(); acc -= FIXED_DT_MS; g++; }
+        while (acc >= FIXED_DT_MS && g < 6) {
+          applyForces(); integrate(); mergeDroplets(); splitDroplets();
+          for (const d of drops) {
+            const dx = d.x - d.softPrevX, dy = d.y - d.softPrevY;
+            d.softVelX += (dx - d.softOffX) * 0.22;
+            d.softVelY += (dy - d.softOffY) * 0.22;
+            d.softVelX *= 0.6; d.softVelY *= 0.6;
+            d.softOffX += d.softVelX; d.softOffY += d.softVelY;
+            d.softPrevX = d.x; d.softPrevY = d.y;
+          }
+          autoSpawn(); mouseSpawn();
+          acc -= FIXED_DT_MS; g++;
+        }
         if (g >= 6) acc = 0;
         mat.uniforms.uTime.value = now * 0.001;
         sync();
@@ -1337,11 +1581,10 @@ void main(){
         renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
         aspect = canvas.clientWidth / canvas.clientHeight;
         mat.uniforms.uRes.value.set(renderer.domElement.width, renderer.domElement.height);
+        drawBackgroundFromDOM();
       });
-
     }
 
-    /* boot when libraries are ready */
     let bootTries = 0;
     function boot() {
       if (window.THREE) start();
@@ -1350,273 +1593,333 @@ void main(){
     boot();
   })();
 
-  /* ---------- navigation ---------- */
-  function navigate(view) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-' + view).classList.add('active');
-    document.getElementById('app').scrollTop = 0;
+  /* ---------- hero stats (real data) ---------- */
+  function fillStats() {
+    if (typeof PAPERS === 'undefined') return;
+    const total = PAPERS.length;
+    const orig = PAPERS.filter(p => p.original).length;
+    const regions = new Set(PAPERS.map(p => p.region)).size;
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('st-total', total);
+    set('st-orig', orig);
+    set('st-region', regions);
   }
-  document.getElementById('homeLink').addEventListener('click', () => navigate('home'));
-  document.getElementById('sloganLink').addEventListener('click', () => navigate('home'));
 
-  /* ---------- data ---------- */
-  const realExams = [
-    { id: 'r1', year: '2026', name: '新高考 I 卷', region: '新高考 I', tag: '听力 · 阅读 · 写作', cohort: 26, time: '2026-06-10', heat: 98, hasJiexi: true },
-    { id: 'r2', year: '2026', name: '新高考 II 卷', region: '新高考 II', tag: '听力 · 阅读 · 写作', cohort: 26, time: '2026-06-10', heat: 84, hasJiexi: true },
-    { id: 'r3', year: '2025', name: '新高考 I 卷', region: '新高考 I', tag: '听力 · 阅读 · 写作', cohort: 25, time: '2025-06-10', heat: 92, hasJiexi: true },
-    { id: 'r4', year: '2025', name: '新高考 II 卷', region: '新高考 II', tag: '听力 · 阅读 · 写作', cohort: 25, time: '2025-06-10', heat: 71, hasJiexi: true },
-    { id: 'r5', year: '2025', name: '北京卷', region: '北京', tag: '知识运用 · 写作', cohort: 25, time: '2025-06-10', heat: 66, hasJiexi: true },
-    { id: 'r6', year: '2024', name: '新高考 I 卷', region: '新高考 I', tag: '听力 · 阅读 · 写作', cohort: 24, time: '2024-06-10', heat: 88, hasJiexi: true },
-    { id: 'r7', year: '2024', name: '全国甲卷', region: '全国甲卷', tag: '听力 · 阅读 · 短文改错', cohort: 24, time: '2024-06-10', heat: 52, hasJiexi: true },
-    { id: 'r8', year: '2023', name: '新高考 I 卷', region: '新高考 I', tag: '听力 · 阅读 · 写作', cohort: 23, time: '2023-06-10', heat: 74, hasJiexi: true },
-  ];
+  /* ---------- library ---------- */
+  const libState = { q: '', year: 'All', region: 'All', type: 'All', ptype: 'All', originalOnly: false };
 
-  const mockExams = [
-    { id: 'm1', year: '2026', name: '浙江省 Z20 名校联盟二次联考', region: '名校联考', tag: '成套 · 含解析', cohort: 26, time: '2026-05-20', heat: 63, hasJiexi: true },
-    { id: 'm2', year: '2026', name: '杭州市高三教学质量检测(二模)', region: '浙江', tag: '成套 · 含解析', cohort: 26, time: '2026-04-18', heat: 81, hasJiexi: true },
-    { id: 'm3', year: '2026', name: '宁波十校联考高三三月联考', region: '浙江', tag: '成套 · 含解析', cohort: 26, time: '2026-03-25', heat: 57, hasJiexi: true },
-    { id: 'm4', year: '2026', name: '苏锡常镇四市高三教学情况调查(一)', region: '江苏', tag: '成套 · 含解析', cohort: 26, time: '2026-03-10', heat: 45, hasJiexi: true },
-    { id: 'm5', year: '2026', name: '南京师范大学附中高三模拟', region: '江苏', tag: '成套 · 无解析', cohort: 26, time: '2026-02-28', heat: 39, hasJiexi: false },
-    { id: 'm6', year: '2026', name: '浙江省强基联盟高三联考', region: '浙江', tag: '成套 · 含解析', cohort: 26, time: '2026-01-15', heat: 48, hasJiexi: true },
-    { id: 'm7', year: '2025', name: '温州市高三一模', region: '浙江', tag: '成套 · 无解析', cohort: 25, time: '2025-11-05', heat: 35, hasJiexi: false },
-    { id: 'm8', year: '2025', name: 'N 名校联盟(江苏浙江)高三联考', region: '名校联考', tag: '成套 · 含解析', cohort: 25, time: '2025-10-20', heat: 42, hasJiexi: true },
-  ];
+  function uniqSorted(arr) { return [...new Set(arr)].sort((a, b) => (typeof a === 'number' ? b - a : String(a).localeCompare(b, 'zh'))); }
 
-  const originalItems = {
-    '应用文解析': [
-      { name: '2026 新高考 I 卷 · 应用文真题解析', meta: '题目拆解 · 范文', cohort: 26, time: '2026-06-12', heat: 90 },
-      { name: '2026 杭州二模 · 应用文解析', meta: '题目拆解 · 范文', cohort: 26, time: '2026-04-20', heat: 61 },
-      { name: '应用文审题三步法 · 讲义', meta: '方法 · 例题', cohort: 26, time: '2026-03-02', heat: 55 },
-    ],
-    '续写解析': [
-      { name: '2026 新高考 I 卷 · 读后续写解析', meta: '情节推演 · 范文', cohort: 26, time: '2026-06-12', heat: 87 },
-      { name: '2026 Z20 二次联考 · 读后续写解析', meta: '情节推演 · 范文', cohort: 26, time: '2026-05-22', heat: 58 },
-    ],
-    '应用文语料': [
-      { name: '建议信 · 高频句式与措辞', meta: '句式 · 语气', cohort: 26, time: '2026-02-14', heat: 52 },
-      { name: '邀请信 · 开头与结尾', meta: '模板 · 变体', cohort: 26, time: '2026-02-28', heat: 47 },
-      { name: '通知 · 常用表达', meta: '模板 · 变体', cohort: 26, time: '2026-03-15', heat: 38 },
-    ],
-    '续写语料': [
-      { name: '心理描写 · 词汇块', meta: '情绪 · 心理', cohort: 26, time: '2026-01-20', heat: 64 },
-      { name: '环境描写 · 词汇块', meta: '场景 · 氛围', cohort: 26, time: '2026-01-27', heat: 59 },
-      { name: '无灵主语 · 句式块', meta: '句式 · 升格', cohort: 26, time: '2026-03-08', heat: 44 },
-    ],
-    '小专题': [
-      { name: '读后续写 · 动作描写专题', meta: '微讲义 · 单点突破', cohort: 26, time: '2026-05-02', heat: 55 },
-      { name: '应用文 · 语气与得体', meta: '微讲义 · 单点突破', cohort: 26, time: '2026-04-10', heat: 41 },
-      { name: '续写 · 情节合理性问题', meta: '微讲义 · 单点突破', cohort: 26, time: '2026-05-18', heat: 37 },
-    ],
-  };
+  function buildFilterChips() {
+    if (typeof PAPERS === 'undefined') return;
+    const mk = (wrapId, values, key) => {
+      const wrap = document.getElementById(wrapId);
+      if (!wrap) return;
+      wrap.innerHTML = ['All', ...values].map(v =>
+        `<button class="fchip${libState[key] === v ? ' active' : ''}" data-v="${v}">${v === 'All' ? '全部' : v}</button>`
+      ).join('');
+      wrap.querySelectorAll('.fchip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          libState[key] = btn.dataset.v;
+          wrap.querySelectorAll('.fchip').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderLibrary();
+        });
+      });
+    };
+    mk('fYear', uniqSorted(PAPERS.map(p => p.year)), 'year');
+    mk('fRegion', uniqSorted(PAPERS.map(p => p.region)), 'region');
+    mk('fType', uniqSorted(PAPERS.map(p => p.examType)), 'type');
+    mk('fPtype', uniqSorted(PAPERS.flatMap(p => p.paperTypes)), 'ptype');
+  }
 
-  const originalSections = [
-    { name: '应用文解析', en: 'Applied Writing' },
-    { name: '续写解析', en: 'Continuation Writing' },
-    { name: '应用文语料', en: 'Applied Corpus' },
-    { name: '续写语料', en: 'Continuation Corpus' },
-    { name: '小专题', en: 'Mini Topics' },
-  ];
+  function renderLibrary() {
+    const el = document.getElementById('paperList');
+    const countEl = document.getElementById('libCount');
+    if (typeof PAPERS === 'undefined') { el.innerHTML = '<div class="lib-empty">数据加载失败</div>'; return; }
 
-  const textbookItems = [
-    { id: 't1', year: '2026', name: '人教版 必修一 Welcome Unit–Unit 5 · 词汇与短语', region: '人教版', tag: '单元词汇 · 打包', cohort: 26, time: '2026-01-10', heat: 77, hasJiexi: true },
-    { id: 't2', year: '2026', name: '人教版 必修二 Unit 1–Unit 5 · 课文改编语法填空', region: '人教版', tag: '同步练习 · 含答案', cohort: 26, time: '2026-02-08', heat: 64, hasJiexi: true },
-    { id: 't3', year: '2026', name: '人教版 选择性必修一 · 全册知识点梳理', region: '人教版', tag: '知识梳理 · 打包', cohort: 26, time: '2026-03-01', heat: 58, hasJiexi: false },
-    { id: 't4', year: '2026', name: '外研版 必修一 Unit 1–Unit 6 · 词汇默写版', region: '外研版', tag: '单元词汇 · 打包', cohort: 26, time: '2026-01-18', heat: 52, hasJiexi: true },
-    { id: 't5', year: '2026', name: '外研版 必修二 · 课文重点句型与仿写', region: '外研版', tag: '同步练习 · 含答案', cohort: 26, time: '2026-02-20', heat: 46, hasJiexi: true },
-    { id: 't6', year: '2026', name: '北师大版 必修一 · 单元语法汇总与练习', region: '北师大版', tag: '语法汇总 · 含答案', cohort: 26, time: '2026-01-25', heat: 43, hasJiexi: true },
-    { id: 't7', year: '2026', name: '北师大版 必修二 · 课文语篇填空', region: '北师大版', tag: '同步练习 · 无答案', cohort: 26, time: '2026-02-26', heat: 31, hasJiexi: false },
-    { id: 't8', year: '2026', name: '译林版 必修一 Unit 1–Unit 4 · 词汇与短语', region: '译林版', tag: '单元词汇 · 打包', cohort: 26, time: '2026-01-12', heat: 49, hasJiexi: true },
-    { id: 't9', year: '2026', name: '译林版 必修二 · 课文选段语言点精讲', region: '译林版', tag: '知识梳理 · 打包', cohort: 26, time: '2026-02-14', heat: 55, hasJiexi: true },
-    { id: 't10', year: '2025', name: '译林版 选择性必修一 · 语篇赏析与语言点', region: '译林版', tag: '知识梳理 · 打包', cohort: 25, time: '2025-09-20', heat: 38, hasJiexi: true },
-  ];
-
-  /* ---------- list state ---------- */
-  const listState = {
-    real: { q: '', chip: 'All', sort: 'cohort' },
-    mock: { q: '', chip: 'All', sort: 'cohort' },
-    textbook: { q: '', chip: 'All', sort: 'cohort' },
-  };
-
-  function applyList(kind, data, listId, kindLabel, eyebrow, backView) {
-    const st = listState[kind];
-    let rows = data.filter(d => {
-      const chipOk = st.chip === 'All' || d.region === st.chip;
-      const q = st.q.trim().toLowerCase();
-      const hay = (d.year + d.name + d.tag + d.region).toLowerCase();
-      const qOk = !q || hay.includes(q);
-      return chipOk && qOk;
+    const q = libState.q.trim().toLowerCase();
+    let rows = PAPERS.filter(p => {
+      if (libState.originalOnly && !p.original) return false;
+      if (libState.year !== 'All' && String(p.year) !== String(libState.year)) return false;
+      if (libState.region !== 'All' && p.region !== libState.region) return false;
+      if (libState.type !== 'All' && p.examType !== libState.type) return false;
+      if (libState.ptype !== 'All' && !p.paperTypes.includes(libState.ptype)) return false;
+      if (q) {
+        const hay = [p.title, p.region, p.examType, p.source, p.tags.join(' '), p.paperTypes.join(' ')].join(' ').toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
     });
-    if (st.sort === 'cohort')      rows.sort((a,b) => b.cohort - a.cohort || b.time.localeCompare(a.time));
-    else if (st.sort === 'time')   rows.sort((a,b) => b.time.localeCompare(a.time));
-    else if (st.sort === 'heat')   rows.sort((a,b) => b.heat - a.heat);
+    rows.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
-    const el = document.getElementById(listId);
+    countEl.textContent = `${rows.length} 份资料${libState.originalOnly ? ' · 仅 IAI 原创命题' : ''}`;
+    const resetBtn = document.getElementById('libReset');
+    if (resetBtn) resetBtn.style.display = libState.originalOnly ? '' : 'none';
+
     if (!rows.length) {
-      el.innerHTML = `<div class="search-empty">没有找到相关内容,换个关键词试试。</div>`;
+      el.innerHTML = '<div class="lib-empty">没有找到相关内容,换个关键词或筛选条件试试。</div>';
       return;
     }
-    el.innerHTML = rows.map(d => {
-      const payload = JSON.stringify(d).replace(/'/g, "&#39;");
-      return `
-      <div class="resource-item" onclick='openExamDetail(${payload}, ${JSON.stringify(kindLabel)}, ${JSON.stringify(eyebrow)}, ${JSON.stringify(backView)})'>
-        <div class="title"><span class="yr">${d.year}</span>${d.name}</div>
-        <div class="tag ${d.hasJiexi ? '' : 'jiexi-no'}">${d.tag}</div>
-      </div>`;
-    }).join('');
-  }
 
-  function renderReal()  { applyList('real', realExams, 'realList', '高考真题', 'Gaokao Archive', 'real'); }
-  function renderMock()  { applyList('mock', mockExams, 'mockList', '模拟试卷', 'Mock Papers', 'mock'); }
-  function renderTextbook() { applyList('textbook', textbookItems, 'textbookList', '课本资料', 'Textbooks', 'textbook'); }
-
-  function wireListControls(kind, searchId, chipWrapId, sortWrapId, rerender) {
-    document.getElementById(searchId).addEventListener('input', e => {
-      listState[kind].q = e.target.value; rerender();
-    });
-    document.querySelectorAll('#' + chipWrapId + ' .chip').forEach(c => {
-      c.addEventListener('click', () => {
-        document.querySelectorAll('#' + chipWrapId + ' .chip').forEach(x => x.classList.remove('active'));
-        c.classList.add('active');
-        listState[kind].chip = c.innerText.trim();
-        rerender();
-      });
-    });
-    document.querySelectorAll('#' + sortWrapId + ' .sort-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#' + sortWrapId + ' .sort-btn').forEach(x => x.classList.remove('active'));
-        btn.classList.add('active');
-        listState[kind].sort = btn.dataset.sort;
-        rerender();
-      });
-    });
-  }
-
-  wireListControls('real', 'searchReal', 'realChips', 'sortReal', renderReal);
-  wireListControls('mock', 'searchMock', 'mockChips', 'sortMock', renderMock);
-  wireListControls('textbook', 'searchTextbook', 'textbookChips', 'sortTextbook', renderTextbook);
-
-  /* ---------- original accordion ---------- */
-  let originalQ = '';
-
-  function renderOriginal() {
-    const q = originalQ.trim().toLowerCase();
-    const wrap = document.getElementById('originalAccordion');
-    wrap.innerHTML = originalSections.map((s, i) => {
-      const items = originalItems[s.name].filter(it => {
-        return !q || (it.name + it.meta).toLowerCase().includes(q);
-      });
-      return `
-      <div class="acc-section${q && items.length ? ' open' : ''}" data-sec="${i}">
-        <div class="acc-head" onclick="toggleAcc(${i})">
-          <div class="no">0${i+1}</div>
-          <div class="name">${s.name}<span class="name-en">${s.en}</span></div>
-          <div class="count">${items.length} 篇</div>
-          <div class="caret">→</div>
-        </div>
-        <div class="acc-body">
-          <div class="resource-list" style="border-top:none;">
-            ${items.map(it => `
-              <div class="resource-item" onclick="openOriginalDetail('${s.name}', '${it.name.replace(/'/g, "\\'")}', '${it.cohort}', '${it.time}', '${it.heat}', '${it.meta.replace(/'/g, "\\'")}')">
-                <div class="title">${it.name}</div>
-                <div class="tag">${it.meta}</div>
-              </div>`).join('') || '<div class="search-empty">此分类下没有匹配的内容。</div>'}
+    el.innerHTML = rows.map(p => `
+      <div class="paper-item" onclick="downloadPaper('${p.id}')">
+        <div>
+          <div class="p-title">${p.original ? '<span class="orig-badge">IAI 原创</span> ' : ''}${p.title}</div>
+          <div class="p-meta">
+            <em>${p.year} 届</em><span class="sep">/</span>
+            <em>${p.region}</em><span class="sep">/</span>
+            <em>${p.examType}</em><span class="sep">/</span>
+            <em>${p.source}</em><span class="sep">/</span>
+            <em>${p.paperTypes.join(' · ')}</em>
           </div>
         </div>
-      </div>`;
-    }).join('');
+        <div class="p-files">
+          <span class="file-pill ${p.hasAudio ? '' : 'off'}">听力</span>
+          <span class="file-pill ${p.hasAnswer ? '' : 'off'}">答案</span>
+          <span class="file-pill ${p.hasVocab ? '' : 'off'}">词汇</span>
+        </div>
+      </div>`).join('');
   }
 
-  function toggleAcc(i) {
-    document.querySelector(`[data-sec="${i}"]`).classList.toggle('open');
+  function downloadPaper(id) {
+    const p = (typeof PAPERS !== 'undefined' ? PAPERS : []).find(x => x.id === id);
+    if (!p) return;
+    if (p.downloadUrl && p.downloadUrl !== '#') { window.open(p.downloadUrl, '_blank'); return; }
+    alert('演示数据:「' + p.title + '」\n正式上线后此处跳转下载(网盘/直链)。');
   }
 
-  document.getElementById('searchOriginal').addEventListener('input', e => {
-    originalQ = e.target.value;
-    renderOriginal();
+  function clearOriginal(e) {
+    if (e) e.preventDefault();
+    libState.originalOnly = false;
+    renderLibrary();
+  }
+
+  document.getElementById('libQ').addEventListener('input', e => {
+    libState.q = e.target.value;
+    renderLibrary();
   });
 
-  /* ---------- detail ---------- */
-  const detailCtx = { back: 'real' };
+  buildFilterChips();
+  renderLibrary();
 
-  function openDetail(d) {
-    detailCtx.back = d.back || 'real';
-    document.getElementById('detailEyebrow').innerText = d.eyebrow;
-    document.getElementById('detailTitle').innerText = d.title;
-    document.getElementById('detailMeta').innerHTML = (d.meta || [])
-      .map(([k, v]) => `<span class="meta-pill">${k}<b>${v}</b></span>`).join('');
-    document.getElementById('dlName').innerText = d.file || 'IAI_resource.pdf';
-    document.getElementById('dlSpec').innerText = d.spec || 'PDF';
-    document.getElementById('dlBtn2').style.display = d.hasJiexi ? '' : 'none';
-    document.querySelector('#dlBtn .dl-label').innerText = d.primaryLabel || '下载试卷';
+  /* ---------- exam calendar ---------- */
+  (function examCalendar() {
+    const grid = document.getElementById('calDays');
+    const monthEl = document.getElementById('calMonth');
+    const dayNameEl = document.getElementById('calDayName');
+    const evEl = document.getElementById('calEvents');
+    if (!grid || !monthEl) return;
 
-    document.getElementById('detailRelated').innerHTML = (d.related || []).map(r => `
-      <div class="related-row">
-        <div class="r-name">${r[0]}</div>
-        <div class="r-tag">${r[1]}</div>
-      </div>`).join('');
+    const EVENTS = {
+      '2026-08-18': [{ t: '强基联盟 · 暑期联考', d: '浙江 2027 届 · 含听力' }],
+      '2026-08-25': [{ t: '开学摸底考', d: '各地高三陆续开考' }],
+      '2026-09-01': [{ t: '开学考', d: '浙江名校协作体等' }],
+      '2026-09-28': [{ t: 'Z20 名校联盟 · 第一次联考', d: '含听力与解析' }],
+      '2026-10-15': [{ t: '杭州高三月考', d: '十月份月考' }],
+      '2026-11-05': [{ t: '温州一模', d: '2027 届第一次模拟' }],
+      '2026-11-19': [{ t: '宁波十校联考', d: '期中联考' }],
+      '2026-12-10': [{ t: '苏锡常镇 · 教学调研(一)', d: '高三教学情况调查' }],
+      '2027-01-07': [{ t: '浙江首考 · 英语', d: '2027 届第一次高考外语考试' }],
+      '2027-06-08': [{ t: '全国高考 · 英语', d: '考试日' }],
+    };
 
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-detail').classList.add('active');
-    document.getElementById('app').scrollTop = 0;
-  }
+    const today = new Date();
+    let cur = new Date(today.getFullYear(), today.getMonth(), 1);
+    let selected = null;
+    let selCell = null;
 
-  document.getElementById('detailBack').addEventListener('click', () => navigate(detailCtx.back));
+    const fmt = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 
-  function openExamDetail(d, kindLabel, eyebrow, backView) {
-    openDetail({
-      back: backView,
-      eyebrow: eyebrow,
-      title: `${d.year} ${d.name}`,
-      meta: [
-        ['分类', kindLabel],
-        ['届', `${d.cohort} 届`],
-        ['收录', d.time],
-        ['热度', d.heat],
-        ['解析', d.hasJiexi ? '含解析' : '无解析'],
-      ],
-      file: `IAI_${d.year}_${d.name}.pdf`,
-      spec: d.hasJiexi ? 'PDF · 2.4 MB · 试卷 + 解析' : 'PDF · 1.8 MB · 仅试卷',
-      hasJiexi: d.hasJiexi,
-      related: d.id && d.id.startsWith('t')
-        ? [['译林版 必修二 · 课文选段语言点精讲', '课本 · 译林版'], ['无灵主语 · 句式块', '原创 · 续写语料']]
-        : d.id && d.id.startsWith('m')
-        ? [['读后续写 · 动作描写专题', '原创 · 小专题'], ['应用文审题三步法 · 讲义', '原创 · 方法']]
-        : [['2026 新高考 I 卷 · 应用文真题解析', '原创 · 应用文解析'], ['2026 新高考 I 卷 · 读后续写解析', '原创 · 续写解析']],
+    function makeCell(d) {
+      const c = document.createElement('div');
+      c.className = 'cal-cell' + (d === null ? ' empty' : '');
+      if (d !== null) {
+        const sp = document.createElement('span'); sp.textContent = d; c.appendChild(sp);
+        const dot = document.createElement('i'); dot.className = 'cal-dot'; c.appendChild(dot);
+      }
+      return c;
+    }
+
+    function showDay(date) {
+      dayNameEl.textContent = (date.getMonth() + 1) + '月' + date.getDate() + '日';
+      const evs = EVENTS[fmt(date)];
+      evEl.innerHTML = (evs && evs.length)
+        ? evs.map(e => '<div class="cal-ev"><b>' + e.t + '</b><span>' + (e.d || '') + '</span></div>').join('')
+        : '<div class="cal-ev-empty">这天没有安排的考试。</div>';
+    }
+
+    function select(date, c) {
+      if (selCell) selCell.classList.remove('sel');
+      selCell = c; c.classList.add('sel');
+      selected = date;
+      showDay(date);
+    }
+
+    function render() {
+      const y = cur.getFullYear(), m = cur.getMonth();
+      monthEl.textContent = y + '年' + (m + 1) + '月';
+      grid.innerHTML = '';
+      const startOffset = (new Date(y, m, 1).getDay() + 6) % 7;
+      const daysInMonth = new Date(y, m + 1, 0).getDate();
+      for (let i = 0; i < startOffset; i++) grid.appendChild(makeCell(null));
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(y, m, d);
+        const c = makeCell(d);
+        if (EVENTS[fmt(date)]) c.classList.add('has-ev');
+        if (d === today.getDate() && m === today.getMonth() && y === today.getFullYear()) c.classList.add('today');
+        c.addEventListener('click', () => select(date, c));
+        grid.appendChild(c);
+      }
+      const total = startOffset + daysInMonth;
+      for (let i = total; i < Math.ceil(total / 7) * 7; i++) grid.appendChild(makeCell(null));
+      if (selected && selected.getMonth() === m && selected.getFullYear() === y) {
+        const cells = grid.querySelectorAll('.cal-cell:not(.empty)');
+        const c = cells[selected.getDate() - 1];
+        if (c) select(new Date(y, m, selected.getDate()), c);
+      }
+    }
+
+    document.getElementById('calPrev').addEventListener('click', () => { cur = new Date(cur.getFullYear(), cur.getMonth() - 1, 1); render(); });
+    document.getElementById('calNext').addEventListener('click', () => { cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1); render(); });
+
+    render();
+    const todayCell = grid.querySelector('.cal-cell.today') || grid.querySelector('.cal-cell:not(.empty)');
+    if (todayCell) todayCell.click();
+  })();
+
+  /* ---------- polaroid collection ---------- */
+  (function polaroids() {
+    const stage = document.getElementById('poloStage');
+    const folder = document.getElementById('poloFolder');
+    const badge = document.getElementById('folderBadge');
+    if (!stage || !folder) return;
+    const polos = [...stage.querySelectorAll('.polo')];
+    let collected = [];
+
+    function updateBadge() {
+      badge.textContent = collected.length + ' / ' + polos.length;
+      folder.classList.toggle('has-items', collected.length > 0);
+      badge.classList.toggle('full', collected.length === polos.length);
+    }
+
+    polos.forEach((p, i) => {
+      p.style.setProperty('--rot', (p.dataset.rot || 0) + 'deg');
+      p.addEventListener('click', e => {
+        if (e.target.closest('.polo-go')) return;      // let the link work
+        if (collected.length || releasing) return;
+        polos.forEach((pp, j) => collectPolo(pp, j, j * 60));
+      });
     });
-  }
 
-  function openOriginalDetail(cat, name, cohort, time, heat, meta) {
-    openDetail({
-      back: 'original',
-      eyebrow: 'Essay Craft · ' + cat,
-      title: name,
-      meta: [
-        ['分类', cat],
-        ['届', cohort + ' 届'],
-        ['收录', time],
-        ['热度', heat],
-      ],
-      file: 'IAI_' + cat + '_' + time + '.pdf',
-      spec: 'PDF · 含讲义与练习',
-      primaryLabel: '下载解析',
-      hasJiexi: false,
-      related: [
-        ['读后续写 · 动作描写专题', '原创 · 小专题'],
-        ['心理描写 · 词汇块', '原创 · 续写语料'],
-      ],
+    function collectPolo(p, i, delay = 0) {
+      if (collected.includes(p)) return;
+      collected.push(p);
+      updateBadge();
+
+      const pr = p.getBoundingClientRect();
+      const fr = folder.getBoundingClientRect();
+      const dx = fr.left + fr.width / 2 - (pr.left + pr.width / 2);
+      const dy = fr.top + fr.height / 2 - (pr.top + pr.height / 2);
+      const scale = 100 / pr.width;
+      const rot = seededRandom(i + 1) * 20 - 10;
+
+      /* arc: control point offset perpendicular to the flight line */
+      const mx = dx / 2 - dy * 0.28;
+      const my = dy / 2 + dx * 0.28;
+
+      p.animate([
+        { transform: `translate(0,0) rotate(var(--rot)) scale(1)`, offset: 0 },
+        { transform: `translate(${mx}px,${my}px) rotate(${rot / 2}deg) scale(${(1 + scale) / 2})`, offset: 0.55 },
+        { transform: `translate(${dx}px,${dy}px) rotate(${rot}deg) scale(${scale})`, offset: 1 }
+      ], {
+        duration: 700,
+        easing: 'cubic-bezier(0.32, 0.72, 0, 1)',
+        delay: delay,
+        fill: 'forwards'
+      }).onfinish = () => { p.classList.add('gone'); };
+
+      folder.animate([
+        { transform: 'scale(1)' },
+        { transform: 'scale(1.07)' },
+        { transform: 'scale(1)' }
+      ], { duration: 420, delay: delay + 520, easing: 'ease-out' });
+    }
+
+    let releasing = false;
+    function releaseAll() {
+      if (!collected.length || releasing) return;
+      releasing = true;
+      setTimeout(() => { releasing = false; }, 1000);
+      const items = collected;
+      collected = [];
+      updateBadge();
+
+      const fr = folder.getBoundingClientRect();
+      items.forEach((p, i) => {
+        /* cancel the collect animation — its fill:forwards would otherwise
+           keep the element pinned at the folder after the release anim ends */
+        p.getAnimations().forEach(a => a.cancel());
+        p.classList.remove('gone');
+        const t = p.getBoundingClientRect();            /* its home slot */
+        const dx = (fr.left + fr.width / 2) - (t.left + t.width / 2);
+        const dy = (fr.top + fr.height / 2) - (t.top + t.height / 2);
+        p.animate([
+          { transform: `translate(${dx}px,${dy}px) scale(0.66) rotate(${seededRandom(i + 1) * 20 - 10}deg)`, opacity: 0.6 },
+          { transform: 'translate(0,0) rotate(var(--rot)) scale(1)', opacity: 1 }
+        ], { duration: 620, delay: i * 70, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+      });
+
+      folder.animate([
+        { transform: 'scale(1.05)' },
+        { transform: 'scale(1)' }
+      ], { duration: 380, easing: 'ease-out' });
+    }
+
+    folder.addEventListener('click', releaseAll);
+    folder.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); releaseAll(); }
     });
-  }
 
-  function downloadDemo() {
-    const btn = document.getElementById('dlBtn');
-    const old = btn.innerHTML;
-    btn.innerHTML = '✓ 已开始下载';
-    setTimeout(() => { btn.innerHTML = old; }, 1600);
-  }
-  document.getElementById('dlBtn').addEventListener('click', downloadDemo);
-  document.getElementById('dlBtn2').addEventListener('click', downloadDemo);
+    function seededRandom(seed) {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    }
 
-  renderReal(); renderMock(); renderOriginal(); renderTextbook();
+    updateBadge();
+  })();
+
+  /* ---------- 送一朵花 ---------- */
+  (function flowers() {
+    const BASE = 1024;                       /* 演示基数,正式上线接真实统计 */
+    const KEY = 'iai-flowers';
+    const countEl = document.getElementById('flowerCount');
+    const btn = document.getElementById('flowerBtn');
+    if (!countEl || !btn) return;
+    let sent = parseInt(localStorage.getItem(KEY) || '0', 10);
+    if (isNaN(sent)) sent = 0;
+    countEl.textContent = BASE + sent;
+
+    const flowerSVG = `<svg viewBox="0 0 48 48" width="26" height="26" fill="none" stroke="#0a0a0a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="16" r="4.2"/><ellipse cx="24" cy="7.5" rx="4.4" ry="5.4"/><ellipse cx="32.4" cy="12.4" rx="5.4" ry="4.4" transform="rotate(52 32.4 12.4)"/><ellipse cx="32.4" cy="21.6" rx="5.4" ry="4.4" transform="rotate(128 32.4 21.6)"/><ellipse cx="15.6" cy="21.6" rx="5.4" ry="4.4" transform="rotate(52 15.6 21.6)"/><ellipse cx="15.6" cy="12.4" rx="5.4" ry="4.4" transform="rotate(128 15.6 12.4)"/><path d="M24 26v13"/><path d="M24 32c-5-1.5-8-4.5-9-8 4 0 7 2 9 5 2-3 5-5 9-5-1 3.5-4 6.5-9 8z"/></svg>`;
+
+    btn.addEventListener('click', e => {
+      sent += 1;
+      localStorage.setItem(KEY, sent);
+      countEl.textContent = BASE + sent;
+
+      /* flying flower */
+      const fly = document.createElement('div');
+      fly.className = 'flower-fly';
+      fly.innerHTML = flowerSVG;
+      const r = btn.getBoundingClientRect();
+      fly.style.left = (r.left + r.width / 2 - 13 + (Math.random() - 0.5) * 40) + 'px';
+      fly.style.top = (r.top - 10) + 'px';
+      fly.style.setProperty('--fx', ((Math.random() - 0.5) * 90) + 'px');
+      fly.style.setProperty('--fr', ((Math.random() - 0.5) * 120) + 'deg');
+      document.body.appendChild(fly);
+      setTimeout(() => fly.remove(), 1400);
+    });
+  })();
 </script>
 </body>
 </html>
